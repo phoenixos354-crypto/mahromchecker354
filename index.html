@@ -3,504 +3,918 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mahrom Checker v2</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Mahrom Checker v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream:#F9F4EC; --gold:#C9A84C; --gold-dark:#9A7A2E;
-    --green:#1E4D3B; --green-light:#2D6B52; --green-pale:#EAF2EE;
-    --orange:#8B4A00; --orange-pale:#FFF4E6;
-    --red:#8B2020; --red-pale:#F9EDED;
-    --text:#1A1A1A; --text-muted:#6B6B6B;
-    --border:#E0D5C0; --white:#FFFFFF;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--text);overflow-x:hidden;}
-  body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(201,168,76,.08) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(30,77,59,.08) 0%,transparent 50%);pointer-events:none;z-index:0;}
-  .geo{position:fixed;top:0;right:0;width:400px;height:400px;opacity:.04;pointer-events:none;z-index:0;}
-  .container{max-width:580px;margin:0 auto;padding:32px 20px 80px;position:relative;z-index:1;}
+:root {
+  --cream:#F9F4EC; --gold:#C9A84C; --gold-dark:#9A7A2E; --gold-pale:rgba(201,168,76,.1);
+  --green:#1E4D3B; --green-light:#2D6B52; --green-pale:#EAF2EE;
+  --orange:#8B4A00; --orange-pale:#FFF4E6;
+  --red:#8B2020; --red-pale:#F9EDED;
+  --blue:#1a3a6b; --blue-pale:#EEF2FA;
+  --purple:#4a1a6b; --purple-pale:#F3EEF9;
+  --text:#1A1A1A; --text-muted:#6B6B6B; --border:#E0D5C0; --white:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);min-height:100vh;color:var(--text);overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 15% 15%,rgba(201,168,76,.07) 0%,transparent 50%),radial-gradient(circle at 85% 85%,rgba(30,77,59,.07) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.geo{position:fixed;top:0;right:0;width:350px;height:350px;opacity:.035;pointer-events:none;z-index:0;}
+.container{max-width:600px;margin:0 auto;padding:28px 18px 80px;position:relative;z-index:1;}
 
-  .header{text-align:center;margin-bottom:32px;animation:fadeDown .6s ease both;}
-  .bismillah{font-family:'Amiri',serif;font-size:26px;color:var(--gold-dark);margin-bottom:14px;}
-  .ornament{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;}
-  .orn-line{height:1px;width:50px;background:linear-gradient(90deg,transparent,var(--gold));}
-  .orn-line.r{background:linear-gradient(90deg,var(--gold),transparent);}
-  .orn-diamond{width:7px;height:7px;background:var(--gold);transform:rotate(45deg);}
-  .header h1{font-family:'Amiri',serif;font-size:33px;color:var(--green);font-weight:700;margin-bottom:6px;}
-  .header p{font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.6;}
-  .v-badge{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:white;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;letter-spacing:.5px;margin-bottom:10px;}
+/* HEADER */
+.header{text-align:center;margin-bottom:28px;animation:fadeDown .6s ease both;}
+.bismillah{font-family:'Amiri',serif;font-size:24px;color:var(--gold-dark);margin-bottom:12px;}
+.ornament{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;}
+.orn-line{height:1px;width:45px;background:linear-gradient(90deg,transparent,var(--gold));}
+.orn-line.r{background:linear-gradient(90deg,var(--gold),transparent);}
+.orn-diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg);}
+.header h1{font-family:'Amiri',serif;font-size:30px;color:var(--green);font-weight:700;margin-bottom:4px;}
+.header p{font-size:12px;color:var(--text-muted);font-weight:300;line-height:1.6;}
+.v-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green);color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.5px;margin-bottom:8px;}
 
-  .progress-wrap{margin-bottom:26px;animation:fadeUp .6s .1s ease both;}
-  .progress-steps{display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
-  .step-dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text-muted);transition:all .4s ease;position:relative;z-index:1;}
-  .step-dot.active{border-color:var(--gold);background:var(--gold);color:white;transform:scale(1.1);box-shadow:0 0 0 4px rgba(201,168,76,.2);}
-  .step-dot.done{border-color:var(--green);background:var(--green);color:white;}
-  .step-line{height:2px;width:36px;background:var(--border);transition:background .4s ease;}
-  .step-line.done{background:var(--green);}
-  .progress-label{text-align:center;font-size:12px;color:var(--text-muted);font-weight:500;}
+/* PROGRESS */
+.progress-wrap{margin-bottom:22px;}
+.progress-steps{display:flex;align-items:center;justify-content:center;margin-bottom:6px;}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text-muted);transition:all .3s ease;z-index:1;}
+.step-dot.active{border-color:var(--gold);background:var(--gold);color:white;transform:scale(1.12);box-shadow:0 0 0 4px rgba(201,168,76,.2);}
+.step-dot.done{border-color:var(--green);background:var(--green);color:white;}
+.step-line{height:2px;width:28px;background:var(--border);transition:background .3s ease;}
+.step-line.done{background:var(--green);}
+.progress-label{text-align:center;font-size:11px;color:var(--text-muted);font-weight:500;}
 
-  .card{background:var(--white);border-radius:20px;padding:28px;border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,.06),0 1px 4px rgba(0,0,0,.04);animation:fadeUp .5s ease both;}
-  .card-title{font-family:'Amiri',serif;font-size:21px;color:var(--green);margin-bottom:6px;font-weight:700;}
-  .card-desc{font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.6;}
+/* CARD */
+.card{background:var(--white);border-radius:18px;padding:24px;border:1px solid var(--border);box-shadow:0 4px 20px rgba(0,0,0,.05);animation:fadeUp .45s ease both;}
+.card-title{font-family:'Amiri',serif;font-size:20px;color:var(--green);margin-bottom:5px;font-weight:700;}
+.card-desc{font-size:12px;color:var(--text-muted);margin-bottom:18px;line-height:1.6;}
 
-  .options-grid{display:grid;gap:10px;}
-  .options-grid.two-col{grid-template-columns:1fr 1fr;}
-  .option-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border:2px solid var(--border);border-radius:14px;background:var(--cream);cursor:pointer;transition:all .25s ease;text-align:left;position:relative;overflow:hidden;}
-  .option-btn:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,168,76,.15);}
-  .option-btn.selected{border-color:var(--green);background:var(--green-pale);}
-  .option-icon{font-size:24px;flex-shrink:0;}
-  .option-text strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
-  .option-text span{font-size:11px;color:var(--text-muted);}
-  .option-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .25s;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;}
-  .option-btn.selected .option-check{background:var(--green);border-color:var(--green);color:white;}
-  .nasab-depth{display:inline-flex;gap:4px;align-items:center;background:rgba(30,77,59,.1);border-radius:100px;padding:2px 8px;font-size:10px;color:var(--green);font-weight:600;margin-left:6px;vertical-align:middle;}
+/* OPTION BUTTONS */
+.options-grid{display:grid;gap:9px;}
+.options-grid.two-col{grid-template-columns:1fr 1fr;}
+.option-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border:2px solid var(--border);border-radius:12px;background:var(--cream);cursor:pointer;transition:all .2s ease;text-align:left;}
+.option-btn:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,168,76,.14);}
+.option-btn.selected{border-color:var(--green);background:var(--green-pale);}
+.option-icon{font-size:22px;flex-shrink:0;}
+.option-text strong{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:1px;}
+.option-text span{font-size:11px;color:var(--text-muted);line-height:1.4;}
+.option-check{margin-left:auto;width:17px;height:17px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;}
+.option-btn.selected .option-check{background:var(--green);border-color:var(--green);color:white;}
 
-  .val-card{background:var(--white);border-radius:20px;padding:28px;border:2px solid var(--gold);box-shadow:0 4px 24px rgba(201,168,76,.12);animation:fadeUp .4s ease both;}
-  .val-icon{font-size:36px;margin-bottom:10px;}
-  .val-title{font-family:'Amiri',serif;font-size:19px;color:var(--orange);margin-bottom:6px;}
-  .val-desc{font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;}
-  .val-info{background:rgba(201,168,76,.08);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:10px 14px;font-size:12px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;}
-  .val-question{font-size:13px;color:var(--text);margin-bottom:14px;font-weight:600;}
-  .val-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .val-btn{padding:12px;border-radius:12px;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:2px solid transparent;transition:all .25s;}
-  .val-btn.yes{background:var(--green);color:white;}
-  .val-btn.yes:hover{background:var(--green-light);}
-  .val-btn.no{background:transparent;color:var(--red);border-color:var(--red);}
-  .val-btn.no:hover{background:var(--red-pale);}
+/* CATEGORY BADGES */
+.cat-badge{display:inline-flex;align-items:center;gap:4px;border-radius:100px;padding:2px 8px;font-size:9px;font-weight:700;letter-spacing:.3px;margin-left:6px;vertical-align:middle;}
+.cat-badge.jauh{background:rgba(30,77,59,.1);color:var(--green);}
+.cat-badge.sementara{background:rgba(139,74,0,.1);color:var(--orange);}
+.cat-badge.bukan{background:rgba(139,32,32,.1);color:var(--red);}
 
-  .back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;padding:8px 0;margin-bottom:14px;transition:color .2s;}
-  .back-btn:hover{color:var(--green);}
-  .next-btn{width:100%;padding:15px;background:var(--green);color:white;border:none;border-radius:14px;font-size:14px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:18px;transition:all .25s ease;display:flex;align-items:center;justify-content:center;gap:8px;}
-  .next-btn:hover:not(:disabled){background:var(--green-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,77,59,.25);}
-  .next-btn:disabled{opacity:.4;cursor:not-allowed;}
+/* VAL CARD */
+.val-card{background:var(--white);border-radius:18px;padding:24px;border:2px solid var(--gold);box-shadow:0 4px 20px rgba(201,168,76,.1);animation:fadeUp .4s ease both;}
+.val-icon{font-size:32px;margin-bottom:8px;}
+.val-title{font-family:'Amiri',serif;font-size:18px;color:var(--orange);margin-bottom:5px;}
+.val-desc{font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;}
+.val-info{background:rgba(201,168,76,.08);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:9px 12px;font-size:11px;color:var(--text-muted);line-height:1.7;margin-bottom:14px;}
+.val-question{font-size:13px;color:var(--text);margin-bottom:12px;font-weight:600;}
+.val-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.val-btn{padding:11px;border-radius:11px;font-size:12px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.val-btn.yes{background:var(--green);color:white;}
+.val-btn.yes:hover{background:var(--green-light);}
+.val-btn.no{background:transparent;color:var(--red);border-color:var(--red);}
+.val-btn.no:hover{background:var(--red-pale);}
 
-  .result-card{border-radius:20px;padding:28px;text-align:center;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;}
-  .result-card.mahrom{background:var(--green-pale);border:2px solid var(--green);}
-  .result-card.bukan-mahrom{background:var(--red-pale);border:2px solid var(--red);}
-  .result-icon{font-size:52px;margin-bottom:10px;animation:bounceIn .6s .2s both;}
-  .result-badge{display:inline-block;padding:5px 18px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;}
-  .mahrom .result-badge{background:var(--green);color:white;}
-  .bukan-mahrom .result-badge{background:var(--red);color:white;}
-  .result-title{font-family:'Amiri',serif;font-size:24px;font-weight:700;margin-bottom:6px;}
-  .mahrom .result-title{color:var(--green);}
-  .bukan-mahrom .result-title{color:var(--red);}
-  .result-subtitle{font-size:13px;color:var(--text-muted);margin-bottom:18px;line-height:1.6;}
-  .hubungan-tag{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:4px 12px;font-size:11px;color:var(--text-muted);margin-bottom:12px;}
+/* NAV */
+.back-btn{display:inline-flex;align-items:center;gap:5px;background:none;border:none;color:var(--text-muted);font-size:12px;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;padding:6px 0;margin-bottom:12px;transition:color .2s;}
+.back-btn:hover{color:var(--green);}
+.next-btn{width:100%;padding:14px;background:var(--green);color:white;border:none;border-radius:12px;font-size:14px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:16px;transition:all .2s ease;display:flex;align-items:center;justify-content:center;gap:7px;}
+.next-btn:hover:not(:disabled){background:var(--green-light);transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,77,59,.22);}
+.next-btn:disabled{opacity:.38;cursor:not-allowed;}
 
-  .implikasi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px;}
-  .implikasi-item{background:rgba(255,255,255,.7);border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text);border:1px solid var(--border);}
-  .implikasi-icon{font-size:15px;}
+/* RESULT */
+.result-card{border-radius:18px;padding:24px;text-align:center;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;}
+.result-card.mahrom{background:var(--green-pale);border:2px solid var(--green);}
+.result-card.mahrom-sementara{background:var(--orange-pale);border:2px solid var(--orange);}
+.result-card.bukan-mahrom{background:var(--red-pale);border:2px solid var(--red);}
+.result-card.wali{background:var(--blue-pale);border:2px solid var(--blue);}
+.result-icon{font-size:48px;margin-bottom:8px;animation:bounceIn .6s .15s both;}
+.result-badge{display:inline-block;padding:4px 16px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.mahrom .result-badge{background:var(--green);color:white;}
+.mahrom-sementara .result-badge{background:var(--orange);color:white;}
+.bukan-mahrom .result-badge{background:var(--red);color:white;}
+.wali .result-badge{background:var(--blue);color:white;}
+.result-title{font-family:'Amiri',serif;font-size:22px;font-weight:700;margin-bottom:5px;}
+.mahrom .result-title{color:var(--green);}
+.mahrom-sementara .result-title{color:var(--orange);}
+.bukan-mahrom .result-title{color:var(--red);}
+.wali .result-title{color:var(--blue);}
+.result-subtitle{font-size:12px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;}
+.hubungan-tag{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:10px;color:var(--text-muted);margin-bottom:10px;}
 
-  .dalil-section{background:var(--white);border-radius:14px;padding:18px;margin-top:14px;text-align:left;border:1px solid var(--border);}
-  .dalil-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .dalil-item{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);}
-  .dalil-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
-  .dalil-source{font-size:10px;font-weight:600;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
-  .dalil-arabic{font-family:'Amiri',serif;font-size:17px;color:var(--green);line-height:1.8;margin-bottom:5px;text-align:right;direction:rtl;}
-  .dalil-trans{font-size:12px;color:var(--text-muted);font-style:italic;line-height:1.6;}
-  .dalil-note{font-size:12px;color:var(--text);line-height:1.6;margin-top:5px;}
+/* IMPLIKASI */
+.implikasi-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
+.implikasi-item{background:rgba(255,255,255,.75);border-radius:9px;padding:9px;display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text);border:1px solid var(--border);}
+.implikasi-icon{font-size:14px;}
 
-  .special-note{border-radius:12px;padding:12px 14px;margin-top:12px;font-size:12px;line-height:1.6;}
-  .special-note.warning{background:rgba(139,74,0,.06);border:1px solid rgba(139,74,0,.25);color:var(--orange);}
-  .special-note.info{background:rgba(30,77,59,.06);border:1px solid rgba(30,77,59,.2);color:var(--green);}
-  .special-note strong{display:block;margin-bottom:4px;}
+/* WALI LIST */
+.wali-list{background:var(--white);border-radius:12px;padding:14px;margin-top:12px;text-align:left;border:1px solid var(--border);}
+.wali-list-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--blue);margin-bottom:10px;}
+.wali-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.wali-item:last-child{border-bottom:none;}
+.wali-num{width:22px;height:22px;border-radius:50%;background:var(--blue);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.wali-text{font-size:12px;color:var(--text);line-height:1.5;}
+.wali-text small{display:block;font-size:10px;color:var(--text-muted);margin-top:2px;}
 
-  .reset-btn{width:100%;padding:13px;background:transparent;color:var(--green);border:2px solid var(--green);border-radius:14px;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:14px;transition:all .25s ease;}
-  .reset-btn:hover{background:var(--green);color:white;}
-  .disclaimer{margin-top:18px;padding:12px 14px;background:rgba(201,168,76,.08);border-radius:12px;border-left:3px solid var(--gold);font-size:11px;color:var(--text-muted);line-height:1.6;}
+/* DALIL */
+.dalil-section{background:var(--white);border-radius:12px;padding:16px;margin-top:12px;text-align:left;border:1px solid var(--border);}
+.dalil-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gold-dark);margin-bottom:10px;}
+.dalil-item{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.dalil-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.dalil-source{font-size:9px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.dalil-arabic{font-family:'Amiri',serif;font-size:16px;color:var(--green);line-height:1.8;margin-bottom:4px;text-align:right;direction:rtl;}
+.dalil-trans{font-size:11px;color:var(--text-muted);font-style:italic;line-height:1.6;}
+.dalil-note{font-size:11px;color:var(--text);line-height:1.6;margin-top:4px;}
 
-  @keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
-  @keyframes bounceIn{from{opacity:0;transform:scale(.3) rotate(-10deg)}60%{transform:scale(1.2) rotate(5deg)}to{opacity:1;transform:scale(1) rotate(0)}}
-  .hidden{display:none!important;}
-  .slide-in{animation:fadeUp .4s ease both;}
+/* SPECIAL NOTES */
+.special-note{border-radius:10px;padding:10px 12px;margin-top:10px;font-size:11px;line-height:1.6;}
+.special-note.warning{background:rgba(139,74,0,.07);border:1px solid rgba(139,74,0,.2);color:var(--orange);}
+.special-note.info{background:rgba(30,77,59,.07);border:1px solid rgba(30,77,59,.2);color:var(--green);}
+.special-note.alert{background:rgba(139,32,32,.07);border:1px solid rgba(139,32,32,.2);color:var(--red);}
+.special-note strong{display:block;margin-bottom:3px;font-size:12px;}
+
+/* SECTION DIVIDER */
+.section-divider{display:flex;align-items:center;gap:8px;margin:12px 0 8px;}
+.section-divider span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);white-space:nowrap;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* RESET */
+.reset-btn{width:100%;padding:12px;background:transparent;color:var(--green);border:2px solid var(--green);border-radius:12px;font-size:13px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer;margin-top:12px;transition:all .2s ease;}
+.reset-btn:hover{background:var(--green);color:white;}
+.disclaimer{margin-top:16px;padding:10px 12px;background:rgba(201,168,76,.08);border-radius:10px;border-left:3px solid var(--gold);font-size:10px;color:var(--text-muted);line-height:1.6;}
+
+/* MODE TABS */
+.mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.mode-tab{padding:12px;border-radius:12px;border:2px solid var(--border);background:var(--cream);cursor:pointer;text-align:center;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif;}
+.mode-tab:hover{border-color:var(--gold);}
+.mode-tab.active{border-color:var(--green);background:var(--green-pale);}
+.mode-tab .tab-icon{font-size:22px;margin-bottom:4px;}
+.mode-tab .tab-label{font-size:12px;font-weight:600;color:var(--text);}
+.mode-tab .tab-desc{font-size:10px;color:var(--text-muted);margin-top:2px;}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+@keyframes bounceIn{from{opacity:0;transform:scale(.3) rotate(-10deg)}60%{transform:scale(1.18) rotate(4deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.hidden{display:none!important;}
+.slide-in{animation:fadeUp .35s ease both;}
 </style>
 </head>
 <body>
 <svg class="geo" viewBox="0 0 400 400" fill="none">
   <polygon points="200,20 380,380 20,380" stroke="#C9A84C" stroke-width="1" fill="none"/>
-  <polygon points="200,60 340,360 60,360" stroke="#C9A84C" stroke-width="0.5" fill="none"/>
-  <circle cx="200" cy="200" r="150" stroke="#1E4D3B" stroke-width="0.5" fill="none"/>
+  <circle cx="200" cy="200" r="160" stroke="#1E4D3B" stroke-width=".6" fill="none"/>
+  <circle cx="200" cy="200" r="100" stroke="#1E4D3B" stroke-width=".3" fill="none"/>
 </svg>
 
 <div class="container">
   <div class="header">
     <div class="bismillah">بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيْمِ</div>
     <div class="ornament"><div class="orn-line"></div><div class="orn-diamond"></div><div class="orn-line r"></div></div>
-    <div class="v-badge">✨ Versi 2.0 — Validasi Lengkap</div>
+    <div class="v-badge">✨ Versi 3.0 — Lengkap & Akurat</div>
     <h1>Mahrom Checker</h1>
-    <p>Cek hubungan mahrom dengan validasi susuan, dukhul,<br>nasab jauh, dan sepupu</p>
+    <p>Cek mahrom, mahrom sementara, bukan mahrom,<br>dan urutan wali nikah — berdasarkan bagan fiqih lengkap</p>
   </div>
 
+  <!-- PROGRESS -->
   <div class="progress-wrap" id="progressWrap">
-    <div class="progress-steps">
-      <div class="step-dot active" id="dot1">1</div>
-      <div class="step-line" id="line1"></div>
-      <div class="step-dot" id="dot2">2</div>
-      <div class="step-line" id="line2"></div>
-      <div class="step-dot" id="dot3">3</div>
-      <div class="step-line" id="line3"></div>
-      <div class="step-dot" id="dot4">4</div>
-      <div class="step-line" id="line4"></div>
-      <div class="step-dot" id="dot5">5</div>
+    <div class="progress-steps" id="progressSteps"></div>
+    <div class="progress-label" id="progressLabel">Pilih mode</div>
+  </div>
+
+  <!-- SCREEN: MODE -->
+  <div id="screenMode">
+    <div class="card">
+      <div class="card-title">Apa yang ingin kamu cek?</div>
+      <div class="card-desc">Pilih mode sesuai kebutuhanmu.</div>
+      <div class="mode-tabs">
+        <button class="mode-tab" onclick="setMode('mahrom')">
+          <div class="tab-icon">🔍</div>
+          <div class="tab-label">Cek Mahrom</div>
+          <div class="tab-desc">Status mahrom, mahrom sementara, atau bukan mahrom</div>
+        </button>
+        <button class="mode-tab" onclick="setMode('wali')">
+          <div class="tab-icon">🤲</div>
+          <div class="tab-label">Wali Nikah</div>
+          <div class="tab-desc">Urutan wali nikah berdasarkan jalur nasab</div>
+        </button>
+      </div>
     </div>
-    <div class="progress-label" id="progressLabel">Langkah 1 dari 4</div>
   </div>
 
-  <!-- STEP 1 -->
-  <div id="step1" class="card">
-    <div class="card-title">Kamu siapa?</div>
-    <div class="card-desc">Pilih jenis kelamin kamu.</div>
-    <div class="options-grid two-col">
-      <button class="option-btn" onclick="selectOpt('gender','laki',this)">
-        <span class="option-icon">👨</span>
-        <div class="option-text"><strong>Laki-laki</strong><span>Ikhwan</span></div>
-        <div class="option-check">✓</div>
-      </button>
-      <button class="option-btn" onclick="selectOpt('gender','perempuan',this)">
-        <span class="option-icon">👩</span>
-        <div class="option-text"><strong>Perempuan</strong><span>Akhwat</span></div>
-        <div class="option-check">✓</div>
-      </button>
+  <!-- SCREEN: GENDER -->
+  <div id="screenGender" class="hidden">
+    <div class="card">
+      <div class="card-title">Kamu siapa?</div>
+      <div class="card-desc">Pilih jenis kelamin kamu.</div>
+      <div class="options-grid two-col">
+        <button class="option-btn" onclick="selectOpt('gender','laki',this)">
+          <span class="option-icon">👨</span>
+          <div class="option-text"><strong>Laki-laki</strong><span>Ikhwan</span></div>
+          <div class="option-check">✓</div>
+        </button>
+        <button class="option-btn" onclick="selectOpt('gender','perempuan',this)">
+          <span class="option-icon">👩</span>
+          <div class="option-text"><strong>Perempuan</strong><span>Akhwat</span></div>
+          <div class="option-check">✓</div>
+        </button>
+      </div>
+      <button class="next-btn" id="nextGender" onclick="goNext()" disabled>Lanjut →</button>
     </div>
-    <button class="next-btn" id="next1" onclick="goStep(2)" disabled>Lanjut →</button>
   </div>
 
-  <!-- STEP 2 -->
-  <div id="step2" class="card hidden">
-    <button class="back-btn" onclick="goStep(1)">← Kembali</button>
-    <div class="card-title">Dari mana hubungannya?</div>
-    <div class="card-desc">Pilih jenis hubungan antara kamu dan orang yang ingin kamu cek.</div>
-    <div class="options-grid">
-      <button class="option-btn" onclick="selectOpt('type','nasab',this)">
-        <span class="option-icon">🌳</span>
-        <div class="option-text"><strong>Nasab</strong><span>Hubungan darah / keturunan</span></div>
-        <div class="option-check">✓</div>
-      </button>
-      <button class="option-btn" onclick="selectOpt('type','mushaharah',this)">
-        <span class="option-icon">💍</span>
-        <div class="option-text"><strong>Mushaharah</strong><span>Hubungan karena pernikahan</span></div>
-        <div class="option-check">✓</div>
-      </button>
-      <button class="option-btn" onclick="selectOpt('type','susuan',this)">
-        <span class="option-icon">🍼</span>
-        <div class="option-text"><strong>Rada'ah (Susuan)</strong><span>Hubungan karena menyusui</span></div>
-        <div class="option-check">✓</div>
-      </button>
+  <!-- SCREEN: TYPE -->
+  <div id="screenType" class="hidden">
+    <button class="back-btn" onclick="goBack()">← Kembali</button>
+    <div class="card">
+      <div class="card-title">Dari mana hubungannya?</div>
+      <div class="card-desc">Pilih jenis hubungan antara kamu dan orang yang ingin kamu cek.</div>
+      <div class="options-grid" id="typeOptions"></div>
+      <button class="next-btn" id="nextType" onclick="goNext()" disabled>Lanjut →</button>
     </div>
-    <button class="next-btn" id="next2" onclick="goStep(3)" disabled>Lanjut →</button>
   </div>
 
-  <!-- STEP 3 -->
-  <div id="step3" class="card hidden">
-    <button class="back-btn" onclick="goStep(2)">← Kembali</button>
-    <div class="card-title">Dia siapa relatif ke kamu?</div>
-    <div class="card-desc">Pilih yang paling tepat menggambarkan hubungannya.</div>
-    <div class="options-grid" id="relOptions"></div>
-    <button class="next-btn" id="next3" onclick="handleStep3Next()" disabled>Lanjut →</button>
+  <!-- SCREEN: RELATION -->
+  <div id="screenRelation" class="hidden">
+    <button class="back-btn" onclick="goBack()">← Kembali</button>
+    <div class="card">
+      <div class="card-title">Dia siapa relatif ke kamu?</div>
+      <div class="card-desc" id="relDesc">Pilih yang paling tepat.</div>
+      <div class="options-grid" id="relOptions"></div>
+      <button class="next-btn" id="nextRelation" onclick="goNext()" disabled>Lanjut →</button>
+    </div>
   </div>
 
-  <!-- STEP 4: Validation -->
-  <div id="step4val" class="hidden">
-    <button class="back-btn" onclick="goStep(3)">← Kembali</button>
+  <!-- SCREEN: VALIDATION -->
+  <div id="screenVal" class="hidden">
+    <button class="back-btn" onclick="goBack()">← Kembali</button>
     <div class="val-card" id="valCard"></div>
   </div>
 
-  <!-- STEP 5: Result -->
-  <div id="step5" class="hidden">
-    <button class="back-btn" onclick="backFromResult()">← Kembali</button>
+  <!-- SCREEN: RESULT -->
+  <div id="screenResult" class="hidden">
+    <button class="back-btn" onclick="goBack()">← Kembali</button>
     <div id="resultContainer"></div>
-    <button class="reset-btn" onclick="reset()">🔄 Cek Lagi dari Awal</button>
-    <div class="disclaimer">⚠️ <strong>Catatan:</strong> Aplikasi ini bersifat informatif dan edukatif. Untuk kasus yang kompleks atau masih ragu, silakan berkonsultasi dengan ustadz atau ulama terpercaya.</div>
+    <button class="reset-btn" onclick="reset()">🔄 Mulai dari Awal</button>
+    <div class="disclaimer">⚠️ <strong>Catatan:</strong> Aplikasi ini bersifat informatif dan edukatif. Untuk kasus kompleks, silakan berkonsultasi dengan ustadz atau ulama terpercaya.</div>
+  </div>
+
+  <!-- SCREEN: WALI GENDER -->
+  <div id="screenWaliGender" class="hidden">
+    <div class="card">
+      <div class="card-title">Wali untuk siapa?</div>
+      <div class="card-desc">Urutan wali nikah berbeda berdasarkan jalur nasab.</div>
+      <div class="options-grid">
+        <button class="option-btn" onclick="showWaliResult('bapak')">
+          <span class="option-icon">👨‍👧</span>
+          <div class="option-text"><strong>Wali dari Nasab Bapak</strong><span>Jalur utama yang diprioritaskan</span></div>
+          <div class="option-check">✓</div>
+        </button>
+        <button class="option-btn" onclick="showWaliResult('ibu')">
+          <span class="option-icon">👩‍👧</span>
+          <div class="option-text"><strong>Wali dari Nasab Ibu</strong><span>Dipakai jika tidak ada wali dari nasab bapak</span></div>
+          <div class="option-check">✓</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:20px 0 32px;position:relative;z-index:1;">
+  <div style="display:inline-flex;align-items:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:#9A7A2E;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:100px;padding:6px 16px;">
+    Made with ☕ By <a href="https://instagram.com/azizi_falaqi07" target="_blank" style="color:#1E4D3B;font-weight:700;text-decoration:none;">@azizi_falaqi07</a>
   </div>
 </div>
 
 <script>
-const S = { gender:null, type:null, relation:null, needsValidation:false, validationType:null };
+// ─── STATE ──────────────────────────────────────────────────────────────
+const S = {
+  mode: null,        // 'mahrom' | 'wali'
+  gender: null,      // 'laki' | 'perempuan'
+  type: null,        // 'nasab'|'mushaharah_selamanya'|'mushaharah_sementara'|'susuan'|'pernikahan_susuan'|'bukan_mahrom'
+  relation: null,
+  needsVal: false,
+  valType: null,     // 'susuan' | 'dukhul_laki' | 'dukhul_perempuan'
+  screen: 'mode',    // current screen name
+  history: [],       // screen history for back navigation
+};
 
-const RELS = {
-  laki:{
-    nasab:[
-      {id:'ibu',        label:'Ibu Kandung',              icon:'👩',   desc:'Ibu kandung'},
-      {id:'nenek',      label:'Nenek',                    icon:'👵',   desc:'Ibu dari ayah atau ibu'},
-      {id:'buyut_p',    label:'Buyut / Leluhur Perempuan',icon:'👵',   desc:'Nenek dari nenek dan seterusnya ke atas', depth:'Nasab Jauh'},
-      {id:'anak_p',     label:'Anak Perempuan',           icon:'👧',   desc:'Anak kandung perempuan'},
-      {id:'cucu_p',     label:'Cucu Perempuan',           icon:'👶',   desc:'Anak dari anak perempuan/laki-laki'},
-      {id:'cicit_p',    label:'Cicit / Keturunan Jauh',   icon:'🧒',   desc:'Cucu dari cucu dan seterusnya ke bawah', depth:'Nasab Jauh'},
-      {id:'saudari',    label:'Saudari Kandung',          icon:'👩‍👦',desc:'Kandung, seayah, atau seibu'},
-      {id:'bibi',       label:'Bibi (Saudari Ayah/Ibu)',  icon:'👩‍🦳',desc:'Saudari dari ayah atau ibu'},
-      {id:'keponakan_p',label:'Keponakan Perempuan',      icon:'👧',   desc:'Anak perempuan dari saudara/saudari'},
-      {id:'sepupu_p',   label:'Sepupu Perempuan',         icon:'🙍‍♀️',desc:'Anak perempuan dari paman atau bibi', sepupu:true},
-    ],
-    mushaharah:[
-      {id:'ibu_mertua',  label:'Ibu Mertua',           icon:'👩‍🦳',desc:'Ibu dari istri'},
-      {id:'nenek_mertua',label:'Nenek Mertua',         icon:'👵',   desc:'Nenek dari istri'},
-      {id:'ibu_tiri',    label:'Ibu Tiri',             icon:'👩',   desc:'Istri dari ayah kandung'},
-      {id:'menantu_p',   label:'Menantu Perempuan',    icon:'👰',   desc:'Istri dari anak laki-laki kandung'},
-      {id:'anak_tiri_p', label:'Anak Tiri Perempuan',  icon:'👧',   desc:'Anak perempuan dari istri', needsDukhul:'dukhul_laki'},
-      {id:'saudari_ipar',label:'Saudari Ipar',         icon:'👩',   desc:'Saudari perempuan dari istri'},
-    ],
-    susuan:[
-      {id:'ibu_susuan',    label:'Ibu Susuan',                  icon:'🤱',desc:'Wanita yang menyusuimu',         needsSusuan:true},
-      {id:'nenek_susuan',  label:'Nenek Susuan',                icon:'👵',desc:'Ibu dari ibu susuan',            needsSusuan:true},
-      {id:'saudari_susuan',label:'Saudari Sesusuan',            icon:'👩',desc:'Disusui oleh ibu yang sama',    needsSusuan:true},
-      {id:'bibi_susuan',   label:'Bibi Susuan',                 icon:'👩',desc:'Saudari dari ibu susuan',       needsSusuan:true},
-      {id:'anak_susuan_p', label:'Anak Perempuan Ibu Susuan',   icon:'👧',desc:'Anak kandung ibu susuanmu',    needsSusuan:true},
-    ]
-  },
-  perempuan:{
-    nasab:[
-      {id:'ayah',       label:'Ayah Kandung',              icon:'👨',   desc:'Ayah kandung'},
-      {id:'kakek',      label:'Kakek',                     icon:'👴',   desc:'Ayah dari ayah atau ibu'},
-      {id:'buyut_l',    label:'Buyut / Leluhur Laki-laki', icon:'👴',   desc:'Kakek dari kakek dan seterusnya ke atas', depth:'Nasab Jauh'},
-      {id:'anak_l',     label:'Anak Laki-laki',            icon:'👦',   desc:'Anak kandung laki-laki'},
-      {id:'cucu_l',     label:'Cucu Laki-laki',            icon:'👶',   desc:'Anak dari anak'},
-      {id:'cicit_l',    label:'Cicit / Keturunan Jauh',    icon:'🧒',   desc:'Cucu dari cucu dan seterusnya ke bawah', depth:'Nasab Jauh'},
-      {id:'saudara',    label:'Saudara Kandung',           icon:'👨‍👦',desc:'Kandung, seayah, atau seibu'},
-      {id:'paman',      label:'Paman (Saudara Ayah/Ibu)',  icon:'👨‍🦳',desc:'Saudara laki-laki dari ayah atau ibu'},
-      {id:'keponakan_l',label:'Keponakan Laki-laki',       icon:'👦',   desc:'Anak laki-laki dari saudara/saudari'},
-      {id:'sepupu_l',   label:'Sepupu Laki-laki',          icon:'🙍‍♂️',desc:'Anak laki-laki dari paman atau bibi', sepupu:true},
-    ],
-    mushaharah:[
-      {id:'ayah_mertua', label:'Ayah Mertua',          icon:'👨‍🦳',desc:'Ayah dari suami'},
-      {id:'kakek_mertua',label:'Kakek Mertua',         icon:'👴',   desc:'Kakek dari suami'},
-      {id:'ayah_tiri',   label:'Ayah Tiri',            icon:'👨',   desc:'Suami dari ibu kandung'},
-      {id:'menantu_l',   label:'Menantu Laki-laki',    icon:'🤵',   desc:'Suami dari anak perempuan kandung'},
-      {id:'anak_tiri_l', label:'Anak Tiri Laki-laki',  icon:'👦',   desc:'Anak laki-laki dari suami', needsDukhul:'dukhul_perempuan'},
-      {id:'saudara_ipar',label:'Saudara Ipar',         icon:'👨',   desc:'Saudara laki-laki dari suami'},
-    ],
-    susuan:[
-      {id:'ayah_susuan',   label:'Ayah Susuan',                 icon:'👨',desc:'Suami dari wanita yang menyusuimu', needsSusuan:true},
-      {id:'kakek_susuan',  label:'Kakek Susuan',                icon:'👴',desc:'Ayah dari ibu susuan',             needsSusuan:true},
-      {id:'saudara_susuan',label:'Saudara Sesusuan',            icon:'👦',desc:'Disusui oleh ibu yang sama',      needsSusuan:true},
-      {id:'paman_susuan',  label:'Paman Susuan',                icon:'👨',desc:'Saudara laki-laki dari ibu susuan',needsSusuan:true},
-      {id:'anak_susuan_l', label:'Anak Laki-laki Ibu Susuan',   icon:'👦',desc:'Anak kandung laki-laki ibu susuan',needsSusuan:true},
-    ]
+// ─── SCREEN FLOW ────────────────────────────────────────────────────────
+const SCREENS = ['screenMode','screenGender','screenType','screenRelation','screenVal','screenResult','screenWaliGender'];
+
+function showScreen(id) {
+  SCREENS.forEach(s => document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).classList.add('slide-in');
+  setTimeout(() => document.getElementById(id).classList.remove('slide-in'), 400);
+  S.screen = id;
+  updateProgress();
+}
+
+function pushHistory(screen) { S.history.push(screen); }
+function goBack() {
+  if (S.history.length === 0) return;
+  const prev = S.history.pop();
+  showScreen(prev);
+  // Reset next-step state if going back to relation
+  if (prev === 'screenRelation') { S.relation = null; document.getElementById('nextRelation').disabled = true; }
+  if (prev === 'screenType') { S.type = null; document.getElementById('nextType').disabled = true; }
+  if (prev === 'screenGender') { S.gender = null; document.getElementById('nextGender').disabled = true; }
+}
+
+function updateProgress() {
+  const stepsEl = document.getElementById('progressSteps');
+  const labelEl = document.getElementById('progressLabel');
+
+  if (S.mode === 'mahrom') {
+    const steps = ['Jenis Kelamin','Jenis Hubungan','Relasi','Validasi','Hasil'];
+    const screenToStep = { screenGender:1, screenType:2, screenRelation:3, screenVal:4, screenResult:5 };
+    const active = screenToStep[S.screen] || 0;
+    stepsEl.innerHTML = steps.map((_, i) => {
+      const n = i+1;
+      const cls = n < active ? 'done' : n === active ? 'active' : '';
+      const txt = n < active ? '✓' : n;
+      return `<div class="step-dot ${cls}">${txt}</div>${i < steps.length-1 ? `<div class="step-line ${n < active ? 'done':''}"></div>` : ''}`;
+    }).join('');
+    labelEl.textContent = active ? `Langkah ${active} dari ${steps.length}` : 'Pilih mode';
+  } else if (S.mode === 'wali') {
+    stepsEl.innerHTML = '';
+    labelEl.textContent = 'Mode Wali Nikah';
+  } else {
+    stepsEl.innerHTML = '';
+    labelEl.textContent = 'Pilih mode';
   }
-};
+}
 
-const RES = {
-  // NASAB LAKI
-  ibu:{m:true,n:'Ibu Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'"Diharamkan atas kamu (menikahi) ibu-ibumu..."',p:'Allah secara eksplisit menyebut ibu sebagai wanita haram dinikahi. Seluruh ulama bersepakat ibu kandung adalah mahrom paling utama.'}]},
-  nenek:{m:true,n:'Nenek (Nasab)',d:[{s:"QS. An-Nisa' [4]: 23",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'Kata "ummahaat" (ibu-ibu) mencakup nenek dan seluruh jalur ke atas.',p:'Nenek dari jalur ayah maupun ibu, keduanya mahrom.'}]},
-  buyut_p:{m:true,n:'Buyut / Leluhur Perempuan',d:[{s:"QS. An-Nisa' [4]: 23 + Qiyas",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'Kata "ummahaat" mencakup seluruh leluhur perempuan ke atas tanpa batas generasi.',p:'Buyut, canggah, dan seterusnya — semua mahrom. Tidak ada batas generasi dalam nasab ke atas.'}]},
-  anak_p:{m:true,n:'Anak Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُكُمْ",t:'"...dan anak-anak perempuanmu..."',p:'Disebutkan secara eksplisit dalam Al-Qur\'an.'}]},
-  cucu_p:{m:true,n:'Cucu Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُكُمْ",t:'Kata "banaat" mencakup cucu ke bawah menurut jumhur ulama.',p:'Cucu perempuan dari anak laki-laki maupun anak perempuan — keduanya mahrom.'}]},
-  cicit_p:{m:true,n:'Cicit / Keturunan Perempuan Jauh',d:[{s:"QS. An-Nisa' [4]: 23 + Qiyas",a:"وَبَنَاتُكُمْ",t:'Kata "banaat" mencakup seluruh keturunan perempuan ke bawah tanpa batas generasi.',p:'Cicit, piut, dan seterusnya ke bawah — semuanya mahrom. Tidak ada batas generasi dalam nasab ke bawah.'}]},
-  saudari:{m:true,n:'Saudari Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُمْ",t:'"...dan saudara-saudara perempuanmu..."',p:'Mencakup saudari kandung (seayah seibu), saudari seayah, dan saudari seibu.'}]},
-  bibi:{m:true,n:'Bibi (Saudari Ayah/Ibu)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَعَمَّاتُكُمْ وَخَالَاتُكُمْ",t:'"...bibi-bibimu dari pihak ayah (ammaat) dan dari pihak ibu (khaalaat)..."',p:'"Ammah" = saudari ayah. "Khaalah" = saudari ibu. Keduanya mahrom.'}]},
-  keponakan_p:{m:true,n:'Keponakan Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأَخِ وَبَنَاتُ الْأُخْتِ",t:'"...anak-anak perempuan dari saudaramu laki-laki dan saudaramu perempuan..."',p:'Disebutkan langsung — anak perempuan dari saudara laki-laki maupun saudari.'}]},
-  sepupu_p:{m:false,n:'Sepupu Perempuan',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Ayat 23 menyebutkan rinci siapa yang haram dinikahi. Sepupu tidak termasuk dalam daftar tersebut.',p:'Sepupu perempuan (anak dari paman atau bibi) BUKAN mahrom. Boleh dinikahi. Ini sering disalahpahami.'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab (Hanafi, Maliki, Syafi\'i, Hanbali) sepakat: sepupu bukan mahrom.'}]},
+// ─── MODE SELECTION ──────────────────────────────────────────────────────
+function setMode(mode) {
+  S.mode = mode;
+  S.history = ['screenMode'];
+  if (mode === 'mahrom') {
+    buildTypeOptions();
+    showScreen('screenGender');
+  } else {
+    showScreen('screenWaliGender');
+  }
+}
 
-  // NASAB PEREMPUAN
-  ayah:{m:true,n:'Ayah Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Karena anak perempuan haram bagi ayah, maka ayah adalah mahrom anak perempuan.',p:'Ayah kandung adalah mahrom paling utama bagi wanita, termasuk dalam konteks safar.'}]},
-  kakek:{m:true,n:'Kakek (Nasab)',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Kakek masuk dalam "aba\'ukum" yang mencakup seluruh jalur ke atas.',p:'Kakek dari jalur ayah maupun ibu adalah mahrom.'}]},
-  buyut_l:{m:true,n:'Buyut / Leluhur Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23 + Qiyas",a:'',t:'Kata "aba\'ukum" mencakup seluruh leluhur laki-laki ke atas tanpa batas generasi.',p:'Buyut, canggah, dan seterusnya ke atas — semuanya mahrom bagi perempuan.'}]},
-  anak_l:{m:true,n:'Anak Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَبْنَاؤُكُمُ الَّذِينَ مِنْ أَصْلَابِكُمْ",t:'"...anak-anak laki-laki yang dari tulang rusukmu (kandung)..."',p:'Anak laki-laki kandung adalah mahrom bagi ibunya.'}]},
-  cucu_l:{m:true,n:'Cucu Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَبْنَاؤُكُمُ",t:'Cucu laki-laki masuk dalam "abnaa\'" yang mencakup ke bawah.',p:'Cucu dari anak laki-laki maupun anak perempuan adalah mahrom.'}]},
-  cicit_l:{m:true,n:'Cicit / Keturunan Laki-laki Jauh',d:[{s:"QS. An-Nisa' [4]: 23 + Qiyas",a:'',t:'Kata "abnaa\'" mencakup seluruh keturunan laki-laki ke bawah tanpa batas generasi.',p:'Cicit, piut laki-laki, dan seterusnya — semuanya mahrom.'}]},
-  saudara:{m:true,n:'Saudara Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُمْ",t:'Saudara laki-laki adalah mahrom bagi saudarinya secara timbal balik.',p:'Berlaku untuk kandung, seayah, maupun seibu.'}]},
-  paman:{m:true,n:'Paman (Saudara Ayah/Ibu)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَعَمَّاتُكُمْ وَخَالَاتُكُمْ",t:'Karena bibi adalah mahrom laki-laki, paman adalah mahrom perempuan secara timbal balik.',p:'"Am" = saudara laki-laki ayah. "Khal" = saudara laki-laki ibu. Keduanya mahrom.'}]},
-  keponakan_l:{m:true,n:'Keponakan Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأَخِ وَبَنَاتُ الْأُخْتِ",t:'Keponakan laki-laki adalah mahrom bagi bibinya secara timbal balik.',p:'Anak laki-laki dari saudara maupun saudari adalah mahrom.'}]},
-  sepupu_l:{m:false,n:'Sepupu Laki-laki',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Sepupu tidak termasuk dalam daftar orang yang haram dinikahi. Sepupu laki-laki adalah ajnabi (orang asing) bagi perempuan.',p:'Sepupu laki-laki BUKAN mahrom bagi perempuan. Tidak boleh khalwat, tidak bisa menemani safar. Banyak yang salah sangka!'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab sepakat: wanita tidak boleh bepergian dengan sepupu tanpa mahrom lain.'}]},
-
-  // MUSHAHARAH LAKI
-  ibu_mertua:{m:true,n:'Ibu Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُ نِسَائِكُمْ",t:'"...dan ibu-ibu dari istri-istrimu..."',p:'Ibu mertua menjadi mahrom sejak akad nikah sah — tanpa perlu dukhul.'}]},
-  nenek_mertua:{m:true,n:'Nenek Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُ نِسَائِكُمْ",t:'Mencakup nenek ke atas.',p:'Jumhur ulama menyepakati nenek mertua termasuk mahrom.'}]},
-  ibu_tiri:{m:true,n:'Ibu Tiri',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم مِّنَ النِّسَاءِ",t:'"Dan janganlah kamu menikahi wanita-wanita yang telah dinikahi ayahmu..."',p:'Ibu tiri menjadi mahrom begitu ayah menikah dengannya. Tidak perlu syarat dukhul.'}]},
-  menantu_p:{m:true,n:'Menantu Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَحَلَائِلُ أَبْنَائِكُمُ الَّذِينَ مِنْ أَصْلَابِكُمْ",t:'"...dan istri-istri anak kandungmu..."',p:'Menantu perempuan menjadi mahrom sejak akad nikah dengan anak kandung laki-laki.'}]},
-  anak_tiri_p:{m:true,n:'Anak Tiri Perempuan',kondisi:'dukhul',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ اللَّاتِي فِي حُجُورِكُم مِّن نِّسَائِكُمُ اللَّاتِي دَخَلْتُم بِهِنَّ",t:'"...anak-anak tiri dari istri-istrimu yang sudah kamu gauli..."',p:'Anak tiri perempuan menjadi mahrom HANYA jika ibunya sudah digauli (dukhul). Jika bercerai sebelum dukhul, anak tiri boleh dinikahi.'}]},
-  anak_tiri_p_gagal:{m:false,n:'Anak Tiri Perempuan (Syarat Belum Terpenuhi)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ اللَّاتِي دَخَلْتُم بِهِنَّ",t:'Ayat mensyaratkan dukhul agar anak tiri menjadi mahrom.',p:'Karena belum terjadi dukhul, anak tiri ini BUKAN mahrom. Jika bercerai sebelum dukhul, ia boleh dinikahi.'}]},
-  saudari_ipar:{m:false,n:'Saudari Ipar',d:[{s:"HR. Bukhari & Muslim",a:"الحَمْوُ المَوْتُ",t:'Nabi ﷺ menyebut ipar seperti "maut" — sangat berbahaya jika terjadi khalwat.',p:'Saudari istri BUKAN mahrom. Bahkan lebih ditekankan waspada karena sering dianggap "saudara" padahal bukan.'}]},
-
-  // MUSHAHARAH PEREMPUAN
-  ayah_mertua:{m:true,n:'Ayah Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَآبَاؤُكُمُ الَّذِينَ نَكَحُوا مِن نِّسَائِكُمْ",t:'Ayah dari suami adalah mahrom bagi istri.',p:'Berlaku sejak akad nikah sah, tanpa syarat dukhul.'}]},
-  kakek_mertua:{m:true,n:'Kakek Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Masuk dalam "aba\'" yang mencakup ke atas.',p:'Jumhur ulama menyepakati kakek mertua adalah mahrom.'}]},
-  ayah_tiri:{m:true,n:'Ayah Tiri',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم",t:'Suami dari ibu kandung adalah mahrom bagi anak perempuannya.',p:'Berlaku sejak akad nikah dengan ibu — tanpa syarat dukhul (berbeda dengan hukum anak tiri).'}]},
-  menantu_l:{m:true,n:'Menantu Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَحَلَائِلُ أَبْنَائِكُمُ",t:'Suami dari anak perempuan adalah mahrom bagi ibu (mertua).',p:'Berlaku sejak akad nikah sah.'}]},
-  anak_tiri_l:{m:true,n:'Anak Tiri Laki-laki',kondisi:'dukhul',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ",t:'Anak tiri mengikuti hukum yang sama: berlaku jika terjadi dukhul.',p:'Anak laki-laki dari suami menjadi mahrom jika suami sudah menggauli wanita tersebut. Mayoritas ulama mensyaratkan ini.'}]},
-  anak_tiri_l_gagal:{m:false,n:'Anak Tiri Laki-laki (Syarat Belum Terpenuhi)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ",t:'Syarat dukhul belum terpenuhi, sehingga status mahrom belum berlaku.',p:'Karena suami belum menggaulimu, anak tiri ini belum menjadi mahrom.'}]},
-  saudara_ipar:{m:false,n:'Saudara Ipar (Saudara Suami)',d:[{s:"HR. Bukhari & Muslim",a:"الحَمْوُ المَوْتُ",t:'Nabi ﷺ bersabda ipar seperti "maut".',p:'Saudara laki-laki suami BUKAN mahrom bagi istri. Banyak yang salah sangka karena tinggal serumah. Tidak boleh khalwat dengannya.'}]},
-
-  // SUSUAN (semua)
-  ibu_susuan:{m:true,n:'Ibu Susuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُكُمُ اللَّاتِي أَرْضَعْنَكُمْ",t:'"...dan ibu-ibu yang menyusuimu..."',p:'Disebutkan langsung dalam Al-Qur\'an. Syarat: susuan ≥5 kali mengenyangkan sebelum usia 2 tahun.'}]},
-  nenek_susuan:{m:true,n:'Nenek Susuan',d:[{s:"Qiyas dari QS. An-Nisa' [4]: 23",a:'',t:'Ibu dari ibu susuan mengikuti hukum nasab.',p:'Nenek susuan adalah mahrom, mengikuti kaidah susuan = nasab.'}]},
-  saudari_susuan:{m:true,n:'Saudari Sesusuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'"...dan saudara-saudara perempuanmu sesusuan..."',p:'Disebutkan langsung dalam Al-Qur\'an.'}]},
-  bibi_susuan:{m:true,n:'Bibi Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Nabi ﷺ: "Diharamkan karena susuan apa yang diharamkan karena nasab."',p:'Bibi susuan = mahrom, mengikuti hukum bibi nasab.'}]},
-  anak_susuan_p:{m:true,n:'Anak Perempuan Ibu Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak ibu susuan = seperti saudari sendiri.',p:'Saudara sesusuan mengikuti hukum nasab — mahrom.'}]},
-  ayah_susuan:{m:true,n:'Ayah Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Suami dari ibu susuan = ayah susuan = mahrom.',p:'Para ulama sepakat suami ibu susuan adalah mahrom.'}]},
-  kakek_susuan:{m:true,n:'Kakek Susuan',d:[{s:"Qiyas dari HR. Bukhari",a:'',t:'Mengikuti kaidah: susuan mengikuti nasab.',p:'Kakek susuan = mahrom.'}]},
-  saudara_susuan:{m:true,n:'Saudara Sesusuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'Berlaku dua arah: saudara sesusuan laki-laki adalah mahrom bagi wanita sesusuan.',p:'Syarat susuan tetap berlaku.'}]},
-  paman_susuan:{m:true,n:'Paman Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Saudara laki-laki ibu susuan = paman susuan = mahrom.',p:'Kaidah umum yang disepakati para ulama.'}]},
-  anak_susuan_l:{m:true,n:'Anak Laki-laki Ibu Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak laki-laki ibu susuan = seperti saudara kandung.',p:'Syarat susuan harus terpenuhi.'}]},
-
-  // Gagal susuan
-  susuan_gagal:{m:false,n:'Tidak Memenuhi Syarat Susuan',d:[
-    {s:"HR. Muslim",a:"لَا تُحَرِّمُ الْمَصَّةُ وَالْمَصَّتَانِ",t:'Nabi ﷺ: "Satu atau dua kali isapan tidak menjadikan mahrom."',p:'Syarat susuan menjadi mahrom: (1) minimal 5 kali susuan mengenyangkan, (2) sebelum usia 2 tahun. Jika tidak terpenuhi, tidak ada mahrom dari susuan.'},
-    {s:"HR. Muslim (riwayat Aisyah)",a:"خَمْسُ رَضَعَاتٍ يُحَرِّمْنَ",t:'"Lima kali susuan menjadikan haram (mahrom)."',p:'Pendapat yang dipilih Imam Syafi\'i dan mayoritas ulama berdasarkan hadits shahih.'}
-  ]},
-};
-
-// ─── HELPERS ─────────────────────────────────────────
+// ─── OPT SELECTION ───────────────────────────────────────────────────────
 function selectOpt(key, val, el) {
   S[key] = val;
-  el.closest('.options-grid').querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
+  const parent = el.closest('.options-grid, .mode-tabs');
+  parent.querySelectorAll('.option-btn, .mode-tab').forEach(b => b.classList.remove('selected','active'));
   el.classList.add('selected');
-  if(key==='gender') document.getElementById('next1').disabled=false;
-  if(key==='type')   document.getElementById('next2').disabled=false;
-  if(key==='relation') document.getElementById('next3').disabled=false;
+  if (key==='gender') { document.getElementById('nextGender').disabled=false; buildTypeOptions(); }
+  if (key==='type') { document.getElementById('nextType').disabled=false; buildRelOptions(); }
+  if (key==='relation') document.getElementById('nextRelation').disabled=false;
 }
 
-function showOnly(id) {
-  ['step1','step2','step3','step4val','step5'].forEach(s=>document.getElementById(s).classList.add('hidden'));
-  const el=document.getElementById(id);
-  el.classList.remove('hidden');
-  el.classList.add('slide-in');
-  setTimeout(()=>el.classList.remove('slide-in'),500);
-}
-
-function updateProgress(step) {
-  const map={1:1,2:2,3:3,'4val':4,5:5};
-  const labels={1:'Langkah 1 dari 4',2:'Langkah 2 dari 4',3:'Langkah 3 dari 4','4val':'Validasi Tambahan',5:'Selesai!'};
-  const active=map[step]||step;
-  document.getElementById('progressLabel').textContent=labels[step]||'';
-  for(let i=1;i<=5;i++){
-    const d=document.getElementById('dot'+i);
-    if(!d) continue;
-    if(i<active){d.className='step-dot done';d.textContent='✓';}
-    else if(i===active){d.className='step-dot active';d.textContent=i;}
-    else{d.className='step-dot';d.textContent=i;}
-  }
-  for(let i=1;i<=4;i++){
-    const l=document.getElementById('line'+i);
-    if(l) l.classList.toggle('done',i<active);
+function goNext() {
+  if (S.screen === 'screenGender') {
+    pushHistory('screenGender');
+    showScreen('screenType');
+  } else if (S.screen === 'screenType') {
+    pushHistory('screenType');
+    buildRelOptions();
+    showScreen('screenRelation');
+  } else if (S.screen === 'screenRelation') {
+    handleRelationNext();
   }
 }
 
-function goStep(n) {
-  if(n===3) buildRelOptions();
-  showOnly('step'+n);
-  updateProgress(n);
-}
-
-function buildRelOptions() {
-  S.relation=null;
-  document.getElementById('next3').disabled=true;
-  const c=document.getElementById('relOptions');
-  c.innerHTML='';
-  const rels=((RELS[S.gender]||{})[S.type])||[];
-  rels.forEach(r=>{
-    const btn=document.createElement('button');
-    btn.className='option-btn';
-    btn.innerHTML=`
-      <span class="option-icon">${r.icon}</span>
-      <div class="option-text">
-        <strong>${r.label}${r.depth?`<span class="nasab-depth">📏 ${r.depth}</span>`:''}</strong>
-        <span>${r.desc}</span>
-      </div>
-      <div class="option-check">✓</div>`;
-    btn.onclick=()=>selectOpt('relation',r.id,btn);
+// ─── TYPE OPTIONS ─────────────────────────────────────────────────────────
+function buildTypeOptions() {
+  const c = document.getElementById('typeOptions');
+  if (!c) return;
+  c.innerHTML = '';
+  const types = [
+    { id:'nasab', icon:'🌳', label:'Nasab', desc:'Hubungan darah / keturunan' },
+    { id:'mushaharah_selamanya', icon:'💍', label:'Mushaharah — Mahrom Selamanya', desc:'Dari pernikahan: mertua, anak tiri, ibu tiri, menantu' },
+    { id:'mushaharah_sementara', icon:'⏳', label:'Mushaharah — Mahrom Sementara', desc:'Dari pernikahan: ipar, besan, dll (bukan mahrom sejati)' },
+    { id:'susuan', icon:'🍼', label:"Rada'ah (Susuan)", desc:'Hubungan karena menyusui' },
+    { id:'pernikahan_susuan', icon:'🔗', label:'Pernikahan dari Susuan', desc:'Mahrom karena menikahi kerabat susuan' },
+    { id:'bukan_mahrom', icon:'❓', label:'Bukan Mahrom', desc:'Cek apakah benar-benar bukan mahrom (saudara tiri, besan, dll)' },
+  ];
+  types.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-icon">${t.icon}</span><div class="option-text"><strong>${t.label}</strong><span>${t.desc}</span></div><div class="option-check">✓</div>`;
+    btn.onclick = () => selectOpt('type', t.id, btn);
     c.appendChild(btn);
   });
 }
 
-function handleStep3Next() {
-  const allRels=Object.values(RELS).flatMap(g=>Object.values(g).flat());
-  const rel=allRels.find(r=>r.id===S.relation);
-  if(rel&&rel.needsSusuan){ S.needsValidation=true; S.validationType='susuan'; showValSusuan(); return; }
-  if(rel&&rel.needsDukhul){ S.needsValidation=true; S.validationType=rel.needsDukhul; showValDukhul(rel.needsDukhul); return; }
-  S.needsValidation=false;
+// ─── RELATION DATA ────────────────────────────────────────────────────────
+const RELS = {
+  laki: {
+    nasab: [
+      {id:'ibu',label:'Ibu',icon:'👩',desc:'Ibu kandung'},
+      {id:'nenek',label:'Nenek',icon:'👵',desc:'Ibu dari ayah atau ibu, dan ke atas'},
+      {id:'buyut_p',label:'Buyut / Leluhur Perempuan',icon:'👵',desc:'Nenek dari nenek dan seterusnya',depth:'Nasab Jauh'},
+      {id:'anak_p',label:'Anak Perempuan',icon:'👧',desc:'Anak kandung perempuan'},
+      {id:'cucu_p',label:'Cucu Perempuan',icon:'👶',desc:'Anak dari anak (cucu perempuan), dan ke bawah'},
+      {id:'cicit_p',label:'Cicit / Keturunan Jauh Perempuan',icon:'🧒',desc:'Cucu dari cucu dan seterusnya ke bawah',depth:'Nasab Jauh'},
+      {id:'saudari',label:'Saudari',icon:'👩‍👦',desc:'Kandung, seayah, atau seibu'},
+      {id:'bibi_bapak',label:'Bibi dari Bapak',icon:'👩‍🦳',desc:'Saudari bapak (kandung/seayah/seibu) dan ke atas'},
+      {id:'bibi_ibu',label:'Bibi dari Ibu',icon:'👩‍🦳',desc:'Saudari ibu (kandung/seayah/seibu) dan ke atas'},
+      {id:'keponakan_p_sdr_lk',label:'Keponakan Pr dari Saudara Laki-laki',icon:'👧',desc:'Anak perempuan dari saudara laki-laki (kandung/seayah/seibu), dan ke bawah'},
+      {id:'keponakan_p_sdr_pr',label:'Keponakan Pr dari Saudari',icon:'👧',desc:'Anak perempuan dari saudari (kandung/seayah/seibu), dan ke bawah'},
+      {id:'sepupu_p',label:'Sepupu Perempuan',icon:'🙍‍♀️',desc:'Anak perempuan dari paman atau bibi',sepupu:true},
+    ],
+    mushaharah_selamanya: [
+      {id:'ibu_mertua',label:'Ibu Mertua',icon:'👩‍🦳',desc:'Ibu dari istri — cukup akad nikah, tanpa syarat jima\''},
+      {id:'nenek_mertua',label:'Nenek Mertua',icon:'👵',desc:'Nenek dari istri, dan ke atas'},
+      {id:'anak_tiri_p',label:'Anak Tiri Perempuan',icon:'👧',desc:'Anak perempuan dari istri — syarat: istri sudah dijima\'',needsDukhul:'dukhul_laki'},
+      {id:'cucu_tiri_p',label:'Cucu Tiri Perempuan',icon:'👶',desc:'Anak dari anak tiri perempuan',needsDukhul:'dukhul_laki'},
+      {id:'ibu_tiri',label:'Ibu Tiri',icon:'👩',desc:'Istri dari bapak kandung — cukup akad nikah'},
+      {id:'nenek_tiri',label:'Nenek Tiri',icon:'👵',desc:'Istri dari kakek'},
+      {id:'menantu_p',label:'Menantu Perempuan',icon:'👰',desc:'Istri dari anak laki-laki kandung — cukup akad nikah'},
+      {id:'menantu_cucu_p',label:'Istri Cucu (Menantu Cucu)',icon:'👰',desc:'Istri dari cucu laki-laki'},
+    ],
+    mushaharah_sementara: [
+      {id:'saudari_ipar',label:'Saudari Ipar (Saudari Istri)',icon:'👩',desc:'Saudara perempuan istri — haram selama masih menikah',sementara:true},
+      {id:'bibi_bapak_istri',label:'Bibi Istri dari Bapak',icon:'👩‍🦳',desc:'Saudari bapaknya istri — haram dinikah bersama istri',sementara:true},
+      {id:'bibi_ibu_istri',label:'Bibi Istri dari Ibu',icon:'👩‍🦳',desc:'Saudari ibunya istri — haram dinikah bersama istri',sementara:true},
+      {id:'keponakan_p_sdr_lk_istri',label:'Keponakan Pr (dari Sdr Lk Istri)',icon:'👧',desc:'Anak perempuan dari saudara laki-laki istri',sementara:true},
+      {id:'keponakan_p_sdr_pr_istri',label:'Keponakan Pr (dari Sdr Pr Istri)',icon:'👧',desc:'Anak perempuan dari saudari istri',sementara:true},
+      {id:'istri_sdr_lk',label:'Istri Saudara Laki-laki',icon:'👩',desc:'Istri dari saudara laki-laki — selama masih menikah',sementara:true},
+      {id:'istri_paman_bapak',label:'Istri Paman dari Bapak',icon:'👩',desc:'Istri dari paman (saudara laki-laki bapak)',sementara:true},
+      {id:'istri_paman_ibu',label:'Istri Paman dari Ibu',icon:'👩',desc:'Istri dari paman (saudara laki-laki ibu)',sementara:true},
+      {id:'istri_keponakan_sdr_lk',label:'Istri Keponakan dari Sdr Laki-laki',icon:'👩',desc:'Istri dari keponakan laki-laki (anak dari saudara laki-laki)',sementara:true},
+      {id:'istri_keponakan_sdr_pr',label:'Istri Keponakan dari Sdr Perempuan',icon:'👩',desc:'Istri dari keponakan laki-laki (anak dari saudari)',sementara:true},
+    ],
+    susuan: [
+      {id:'ibu_susuan',label:'Ibu Susuan',icon:'🤱',desc:'Wanita yang menyusuimu',needsSusuan:true},
+      {id:'nenek_susuan',label:'Nenek Susuan',icon:'👵',desc:'Ibu dari ibu susuan, dan ke atas',needsSusuan:true},
+      {id:'anak_p_susuan',label:'Anak Perempuan Susuan',icon:'👧',desc:'Anak kandung atau susuan dari ibu susuan',needsSusuan:true},
+      {id:'saudari_susuan',label:'Saudari Sesusuan',icon:'👩',desc:'Disusui ibu yang sama (kandung atau susuan)',needsSusuan:true},
+      {id:'bibi_bapak_susuan',label:'Bibi dari Bapak Susuan',icon:'👩‍🦳',desc:'Saudari bapak susuan (kandung/susuan)',needsSusuan:true},
+      {id:'bibi_ibu_susuan',label:'Bibi dari Ibu Susuan',icon:'👩‍🦳',desc:'Saudari ibu susuan (kandung/susuan)',needsSusuan:true},
+      {id:'keponakan_p_sdr_lk_susuan',label:'Keponakan Pr dari Sdr Lk Susuan',icon:'👧',desc:'Anak perempuan dari saudara laki-laki susuan',needsSusuan:true},
+      {id:'keponakan_p_sdr_pr_susuan',label:'Keponakan Pr dari Sdr Pr Susuan',icon:'👧',desc:'Anak perempuan dari saudari sesusuan',needsSusuan:true},
+    ],
+    pernikahan_susuan: [
+      {id:'ibu_susuan_istri',label:'Ibu Susuan Istri (Mertua Susuan)',icon:'🤱',desc:'Ibu susuan dari istri — cukup akad nikah',needsSusuan:true},
+      {id:'anak_p_susuan_istri',label:'Anak Tiri Susuan Perempuan',icon:'👧',desc:'Anak perempuan susuan dari istri — syarat: sudah jima\'',needsDukhul:'dukhul_laki',needsSusuan:true},
+      {id:'ibu_tiri_susuan',label:'Ibu Tiri Susuan',icon:'👩',desc:'Istri dari bapak susuan — cukup akad nikah',needsSusuan:true},
+      {id:'menantu_susuan_p',label:'Menantu Susuan Perempuan',icon:'👰',desc:'Istri dari anak laki-laki susuan — cukup akad nikah',needsSusuan:true},
+      {id:'saudari_susuan_istri',label:'Saudari Susuan Istri (Sementara)',icon:'👩',desc:'Saudari sesusuan dari istri — haram selama masih menikah',sementara:true,needsSusuan:true},
+    ],
+    bukan_mahrom: [
+      {id:'sepupu_p2',label:'Sepupu Perempuan',icon:'🙍‍♀️',desc:'Anak perempuan dari paman atau bibi',bukan:true},
+      {id:'saudari_tiri',label:'Saudari Tiri',icon:'👩',desc:'Anak perempuan dari bapak tiri atau ibu tiri',bukan:true},
+      {id:'bibi_tiri',label:'Bibi Tiri',icon:'👩‍🦳',desc:'Saudari dari bapak tiri atau ibu tiri',bukan:true},
+      {id:'keponakan_tiri_p',label:'Keponakan Perempuan Tiri',icon:'👧',desc:'Anak perempuan dari saudara/saudari tiri',bukan:true},
+      {id:'besan_p',label:'Besan Perempuan (Ibu Menantu)',icon:'👩‍🦳',desc:'Ibu dari menantu — bukan mahrom',bukan:true},
+      {id:'anak_menantu_p',label:'Anak Menantu Perempuan',icon:'👧',desc:'Anak perempuan dari menantu — bukan mahrom',bukan:true},
+      {id:'sdr_menantu_p',label:'Saudari Menantu',icon:'👩',desc:'Saudara perempuan dari menantu — bukan mahrom',bukan:true},
+      {id:'istri_bapak_tiri',label:'Istri Bapak Tiri',icon:'👩',desc:'Istri lain dari bapak tiri — bukan mahrom',bukan:true},
+      {id:'mertua_istri_p',label:'Mertua Tiri (Mertua dari Istri Lama)',icon:'👩‍🦳',desc:'Ibu mertua dari istri terdahulu setelah cerai/meninggal',bukan:true},
+    ],
+  },
+  perempuan: {
+    nasab: [
+      {id:'ayah',label:'Ayah',icon:'👨',desc:'Ayah kandung'},
+      {id:'kakek',label:'Kakek',icon:'👴',desc:'Ayah dari ayah atau ibu, dan ke atas'},
+      {id:'buyut_l',label:'Buyut / Leluhur Laki-laki',icon:'👴',desc:'Kakek dari kakek dan seterusnya',depth:'Nasab Jauh'},
+      {id:'anak_l',label:'Anak Laki-laki',icon:'👦',desc:'Anak kandung laki-laki'},
+      {id:'cucu_l',label:'Cucu Laki-laki',icon:'👶',desc:'Anak dari anak (cucu laki-laki), dan ke bawah'},
+      {id:'cicit_l',label:'Cicit / Keturunan Jauh Laki-laki',icon:'🧒',desc:'Cucu dari cucu dan seterusnya ke bawah',depth:'Nasab Jauh'},
+      {id:'saudara',label:'Saudara Laki-laki',icon:'👨‍👦',desc:'Kandung, seayah, atau seibu'},
+      {id:'paman_bapak',label:'Paman dari Bapak',icon:'👨‍🦳',desc:'Saudara laki-laki bapak (kandung/seayah/seibu) dan ke atas'},
+      {id:'paman_ibu',label:'Paman dari Ibu',icon:'👨‍🦳',desc:'Saudara laki-laki ibu (kandung/seayah/seibu) dan ke atas'},
+      {id:'keponakan_l_sdr_lk',label:'Keponakan Lk dari Saudara Laki-laki',icon:'👦',desc:'Anak laki-laki dari saudara laki-laki (kandung/seayah/seibu), dan ke bawah'},
+      {id:'keponakan_l_sdr_pr',label:'Keponakan Lk dari Saudari',icon:'👦',desc:'Anak laki-laki dari saudari (kandung/seayah/seibu), dan ke bawah'},
+      {id:'sepupu_l',label:'Sepupu Laki-laki',icon:'🙍‍♂️',desc:'Anak laki-laki dari paman atau bibi',sepupu:true},
+    ],
+    mushaharah_selamanya: [
+      {id:'ayah_mertua',label:'Ayah Mertua',icon:'👨‍🦳',desc:'Ayah dari suami — cukup akad nikah'},
+      {id:'kakek_mertua',label:'Kakek Mertua',icon:'👴',desc:'Kakek dari suami, dan ke atas'},
+      {id:'anak_tiri_l',label:'Anak Tiri Laki-laki',icon:'👦',desc:'Anak laki-laki dari suami — cukup akad nikah',needsDukhul:'dukhul_perempuan'},
+      {id:'cucu_tiri_l',label:'Cucu Tiri Laki-laki',icon:'👶',desc:'Anak dari anak tiri laki-laki'},
+      {id:'ayah_tiri',label:'Ayah Tiri (Suami Ibu)',icon:'👨',desc:'Suami dari ibu kandung — syarat: ibu sudah dijima\'',needsDukhul:'dukhul_perempuan'},
+      {id:'kakek_tiri',label:'Kakek Tiri (Suami Nenek)',icon:'👴',desc:'Suami dari nenek'},
+      {id:'menantu_l',label:'Menantu Laki-laki',icon:'🤵',desc:'Suami dari anak perempuan kandung — cukup akad nikah'},
+      {id:'menantu_cucu_l',label:'Suami Cucu (Menantu Cucu)',icon:'🤵',desc:'Suami dari cucu perempuan'},
+    ],
+    mushaharah_sementara: [
+      {id:'saudara_ipar',label:'Saudara Ipar (Saudara Suami)',icon:'👨',desc:'Saudara laki-laki suami — bukan mahrom sejati',sementara:true},
+      {id:'paman_bapak_suami',label:'Paman Suami dari Bapak',icon:'👨‍🦳',desc:'Paman dari bapaknya suami',sementara:true},
+      {id:'paman_ibu_suami',label:'Paman Suami dari Ibu',icon:'👨‍🦳',desc:'Paman dari ibunya suami',sementara:true},
+      {id:'keponakan_l_sdr_lk_suami',label:'Keponakan Lk (dari Sdr Lk Suami)',icon:'👦',desc:'Anak laki-laki dari saudara laki-laki suami',sementara:true},
+      {id:'keponakan_l_sdr_pr_suami',label:'Keponakan Lk (dari Sdr Pr Suami)',icon:'👦',desc:'Anak laki-laki dari saudari suami',sementara:true},
+      {id:'suami_sdr_pr',label:'Suami Saudari (Ipar Laki-laki)',icon:'👨',desc:'Suami dari saudari — bukan mahrom sejati',sementara:true},
+      {id:'suami_bibi_bapak',label:'Suami Bibi dari Bapak',icon:'👨',desc:'Suami dari bibi (saudari bapak)',sementara:true},
+      {id:'suami_bibi_ibu',label:'Suami Bibi dari Ibu',icon:'👨',desc:'Suami dari bibi (saudari ibu)',sementara:true},
+      {id:'suami_keponakan_sdr_lk',label:'Suami Keponakan dari Sdr Laki-laki',icon:'👨',desc:'Suami dari keponakan perempuan (anak dari saudara laki-laki)',sementara:true},
+      {id:'suami_keponakan_sdr_pr',label:'Suami Keponakan dari Sdr Perempuan',icon:'👨',desc:'Suami dari keponakan perempuan (anak dari saudari)',sementara:true},
+    ],
+    susuan: [
+      {id:'ayah_susuan',label:'Ayah Susuan',icon:'👨',desc:'Suami dari wanita yang menyusuimu',needsSusuan:true},
+      {id:'kakek_susuan',label:'Kakek Susuan',icon:'👴',desc:'Ayah dari ibu susuan, dan ke atas',needsSusuan:true},
+      {id:'anak_l_susuan',label:'Anak Laki-laki Susuan',icon:'👦',desc:'Anak kandung atau susuan dari ibu susuan',needsSusuan:true},
+      {id:'saudara_susuan',label:'Saudara Sesusuan',icon:'👦',desc:'Disusui ibu yang sama (kandung atau susuan)',needsSusuan:true},
+      {id:'paman_bapak_susuan',label:'Paman dari Bapak Susuan',icon:'👨‍🦳',desc:'Saudara laki-laki bapak susuan (kandung/susuan)',needsSusuan:true},
+      {id:'paman_ibu_susuan',label:'Paman dari Ibu Susuan',icon:'👨‍🦳',desc:'Saudara laki-laki ibu susuan (kandung/susuan)',needsSusuan:true},
+      {id:'keponakan_l_sdr_lk_susuan',label:'Keponakan Lk dari Sdr Lk Susuan',icon:'👦',desc:'Anak laki-laki dari saudara laki-laki susuan',needsSusuan:true},
+      {id:'keponakan_l_sdr_pr_susuan',label:'Keponakan Lk dari Sdr Pr Susuan',icon:'👦',desc:'Anak laki-laki dari saudari sesusuan',needsSusuan:true},
+    ],
+    pernikahan_susuan: [
+      {id:'ayah_susuan_suami',label:'Ayah Susuan Suami (Mertua Susuan)',icon:'👨',desc:'Ayah susuan dari suami — cukup akad nikah',needsSusuan:true},
+      {id:'anak_l_susuan_suami',label:'Anak Tiri Susuan Laki-laki',icon:'👦',desc:'Anak laki-laki susuan dari suami — cukup akad nikah',needsSusuan:true},
+      {id:'ayah_tiri_susuan',label:'Ayah Tiri Susuan (Suami Ibu Susuan)',icon:'👨',desc:'Suami dari ibu susuan — syarat: ibu susuan sudah dijima\'',needsDukhul:'dukhul_perempuan',needsSusuan:true},
+      {id:'menantu_susuan_l',label:'Menantu Susuan Laki-laki',icon:'🤵',desc:'Suami dari anak perempuan susuan — cukup akad nikah',needsSusuan:true},
+      {id:'saudara_susuan_suami',label:'Saudara Susuan Suami (Sementara)',icon:'👦',desc:'Saudara sesusuan dari suami — bukan mahrom sejati',sementara:true,needsSusuan:true},
+    ],
+    bukan_mahrom: [
+      {id:'sepupu_l2',label:'Sepupu Laki-laki',icon:'🙍‍♂️',desc:'Anak laki-laki dari paman atau bibi',bukan:true},
+      {id:'saudara_tiri',label:'Saudara Tiri',icon:'👦',desc:'Anak laki-laki dari bapak tiri atau ibu tiri',bukan:true},
+      {id:'paman_tiri',label:'Paman Tiri',icon:'👨‍🦳',desc:'Saudara laki-laki dari bapak tiri atau ibu tiri',bukan:true},
+      {id:'keponakan_tiri_l',label:'Keponakan Laki-laki Tiri',icon:'👦',desc:'Anak laki-laki dari saudara/saudari tiri',bukan:true},
+      {id:'besan_l',label:'Besan Laki-laki (Bapak Menantu)',icon:'👨‍🦳',desc:'Bapak dari menantu — bukan mahrom',bukan:true},
+      {id:'anak_menantu_l',label:'Anak Menantu Laki-laki',icon:'👦',desc:'Anak laki-laki dari menantu — bukan mahrom',bukan:true},
+      {id:'sdr_menantu_l',label:'Saudara Menantu',icon:'👦',desc:'Saudara laki-laki dari menantu — bukan mahrom',bukan:true},
+      {id:'suami_ibu_tiri',label:'Suami Ibu Tiri Sebelum/Sesudah',icon:'👨',desc:'Suami ibu tiri sebelum menikah dengan bapak atau setelah cerai',bukan:true},
+    ],
+  }
+};
+
+function buildRelOptions() {
+  S.relation = null;
+  document.getElementById('nextRelation').disabled = true;
+  const c = document.getElementById('relOptions');
+  c.innerHTML = '';
+
+  const typeDescMap = {
+    nasab:'Pilih relasi berdasarkan hubungan darah / keturunan.',
+    mushaharah_selamanya:'Mahrom selamanya — tidak bisa menikah meski sudah cerai atau pasangan meninggal.',
+    mushaharah_sementara:'Mahrom sementara (bukan mahrom sejati) — berlaku selama masih menikah. Jika cerai/meninggal, bisa menikah.',
+    susuan:"Hubungan mahrom karena rada'ah (susuan). Memerlukan validasi syarat susuan.",
+    pernikahan_susuan:'Mahrom karena menikahi kerabat dari jalur susuan.',
+    bukan_mahrom:'Hubungan yang sering dianggap mahrom padahal bukan.',
+  };
+  document.getElementById('relDesc').textContent = typeDescMap[S.type] || 'Pilih yang paling tepat.';
+
+  const rels = (RELS[S.gender]||{})[S.type] || [];
+
+  // Group by section for mushaharah_sementara
+  let prevSection = null;
+  rels.forEach(r => {
+    // Add section dividers for mushaharah_sementara
+    if (S.type === 'mushaharah_sementara') {
+      const section = r.id.startsWith('istri_') || r.id.startsWith('suami_') ? 'Dari Pernikahan Kerabat' : 'Dari Nasab Istri/Suami';
+      if (section !== prevSection) {
+        const div = document.createElement('div');
+        div.className = 'section-divider';
+        div.innerHTML = `<span>${section}</span>`;
+        c.appendChild(div);
+        prevSection = section;
+      }
+    }
+
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    let badges = '';
+    if (r.depth) badges += `<span class="cat-badge jauh">📏 ${r.depth}</span>`;
+    if (r.sementara) badges += `<span class="cat-badge sementara">⏳ Sementara</span>`;
+    if (r.bukan) badges += `<span class="cat-badge bukan">❌ Bukan Mahrom</span>`;
+    if (r.sepupu) badges += `<span class="cat-badge bukan">❌ Bukan Mahrom</span>`;
+    btn.innerHTML = `<span class="option-icon">${r.icon}</span><div class="option-text"><strong>${r.label}${badges}</strong><span>${r.desc}</span></div><div class="option-check">✓</div>`;
+    btn.onclick = () => selectOpt('relation', r.id, btn);
+    c.appendChild(btn);
+  });
+}
+
+// ─── STEP 3 NEXT ─────────────────────────────────────────────────────────
+function handleRelationNext() {
+  const allRels = Object.values(RELS).flatMap(g => Object.values(g).flat());
+  const rel = allRels.find(r => r.id === S.relation);
+
+  if (rel && rel.needsSusuan) {
+    S.needsVal = true;
+    S.valType = 'susuan';
+    // After susuan validation, check if also needs dukhul
+    pushHistory('screenRelation');
+    showValSusuan();
+    return;
+  }
+  if (rel && rel.needsDukhul && !rel.needsSusuan) {
+    S.needsVal = true;
+    S.valType = rel.needsDukhul;
+    pushHistory('screenRelation');
+    showValDukhul(rel.needsDukhul);
+    return;
+  }
+  S.needsVal = false;
+  pushHistory('screenRelation');
   renderResult(S.relation);
 }
 
+// ─── VALIDATIONS ──────────────────────────────────────────────────────────
 function showValSusuan() {
-  showOnly('step4val');
-  updateProgress('4val');
-  document.getElementById('valCard').innerHTML=`
+  showScreen('screenVal');
+  document.getElementById('valCard').innerHTML = `
     <div class="val-icon">🍼</div>
     <div class="val-title">Validasi Syarat Susuan</div>
-    <div class="val-desc">Hubungan mahrom dari susuan (rada'ah) baru berlaku jika memenuhi syarat yang ditetapkan syariat.</div>
-    <div class="val-info">📋 <strong>Dua syarat wajib terpenuhi:</strong><br>1️⃣ Susuan terjadi <strong>minimal 5 kali</strong> yang mengenyangkan<br>2️⃣ Susuan terjadi <strong>sebelum usia 2 tahun</strong></div>
+    <div class="val-desc">Hubungan mahrom dari susuan hanya berlaku jika memenuhi kedua syarat berikut.</div>
+    <div class="val-info">📋 <strong>Dua syarat wajib:</strong><br>
+    1️⃣ Susuan terjadi <strong>minimal 5 kali</strong> mengenyangkan<br>
+    2️⃣ Terjadi <strong>sebelum usia 2 tahun</strong><br><br>
+    <em>Dalil: HR. Muslim — "Lima kali susuan menjadikan mahrom" (خَمْسُ رَضَعَاتٍ يُحَرِّمْنَ)</em></div>
     <div class="val-question">Apakah kedua syarat ini terpenuhi?</div>
     <div class="val-buttons">
-      <button class="val-btn yes" onclick="handleSusuan(true)">✅ Ya, keduanya terpenuhi</button>
+      <button class="val-btn yes" onclick="handleSusuan(true)">✅ Ya, terpenuhi</button>
       <button class="val-btn no" onclick="handleSusuan(false)">❌ Tidak / Tidak tahu</button>
     </div>`;
 }
 
-function showValDukhul(type) {
-  showOnly('step4val');
-  updateProgress('4val');
-  const isLaki=type==='dukhul_laki';
-  const q=isLaki?'Apakah kamu sudah menggauli (dukhul) ibunya (istrimu)?':'Apakah suamimu sudah menggaulimu (dukhul)?';
-  const note=isLaki?'Anak tiri perempuan menjadi mahrom hanya jika ibunya (istrimu) sudah digauli. Jika belum dukhul lalu bercerai, anak tiri boleh dinikahi.':'Anak tiri laki-laki menjadi mahrom jika suami sudah menggaulimu. Mayoritas ulama mensyaratkan hal ini.';
-  document.getElementById('valCard').innerHTML=`
+function showValDukhul(type, afterSusuan=false) {
+  showScreen('screenVal');
+  const isLaki = type === 'dukhul_laki';
+  const q = isLaki
+    ? 'Apakah istrimu sudah kamu gauli (dukhul/jima\')?'
+    : 'Apakah suamimu sudah menggaulimu (dukhul/jima\')?';
+  const note = isLaki
+    ? 'Anak tiri perempuan dan anak tiri susuan perempuan menjadi mahrom hanya jika ibunya (istrimu) sudah digauli. Jika belum lalu bercerai, mereka bukan mahrom.'
+    : 'Ayah tiri (suami ibu) menjadi mahrom hanya jika ibu sudah digauli. Untuk anak tiri laki-laki: cukup akad nikah tanpa syarat jima\'.';
+  document.getElementById('valCard').innerHTML = `
     <div class="val-icon">💍</div>
     <div class="val-title">Validasi Syarat Dukhul</div>
-    <div class="val-desc">Status mahrom anak tiri bergantung pada apakah telah terjadi hubungan suami-istri (dukhul).</div>
+    <div class="val-desc">Status mahrom pada kasus ini bergantung pada apakah sudah terjadi hubungan suami-istri (dukhul/jima').</div>
     <div class="val-info">ℹ️ ${note}</div>
     <div class="val-question">${q}</div>
     <div class="val-buttons">
-      <button class="val-btn yes" onclick="handleDukhul(true)">✅ Ya, sudah dukhul</button>
-      <button class="val-btn no" onclick="handleDukhul(false)">❌ Belum dukhul</button>
+      <button class="val-btn yes" onclick="handleDukhul(true,${afterSusuan})">✅ Ya, sudah</button>
+      <button class="val-btn no" onclick="handleDukhul(false,${afterSusuan})">❌ Belum</button>
     </div>`;
 }
 
-function handleSusuan(v){ renderResult(v?S.relation:'susuan_gagal'); }
-function handleDukhul(v){ renderResult(v?S.relation:S.relation+'_gagal'); }
-function backFromResult(){ S.needsValidation?(() => {showOnly('step4val');updateProgress('4val');})():goStep(3); }
+function handleSusuan(valid) {
+  if (!valid) { renderResult('susuan_gagal'); return; }
+  // Check if also needs dukhul
+  const allRels = Object.values(RELS).flatMap(g => Object.values(g).flat());
+  const rel = allRels.find(r => r.id === S.relation);
+  if (rel && rel.needsDukhul) {
+    pushHistory('screenVal');
+    showValDukhul(rel.needsDukhul, true);
+  } else {
+    renderResult(S.relation);
+  }
+}
+function handleDukhul(valid, afterSusuan) {
+  if (valid) { renderResult(S.relation); }
+  else { renderResult(S.relation + '_gagal'); }
+}
 
+// ─── RESULTS DATABASE ─────────────────────────────────────────────────────
+const RES = {
+  // ── NASAB LAKI ──
+  ibu:{status:'mahrom',n:'Ibu Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'"Diharamkan atas kamu ibu-ibumu..."',p:'Ibu kandung adalah mahrom paling utama dalam nasab.'}]},
+  nenek:{status:'mahrom',n:'Nenek (Nasab)',d:[{s:"QS. An-Nisa' [4]: 23",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'Kata "ummahaat" mencakup nenek dan seluruh jalur ke atas.',p:'Nenek dari jalur ayah maupun ibu, beserta ibu dari nenek (buyut), semuanya mahrom.'}]},
+  buyut_p:{status:'mahrom',n:'Buyut / Leluhur Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"حُرِّمَتْ عَلَيْكُمْ أُمَّهَاتُكُمْ",t:'Mencakup seluruh leluhur perempuan ke atas tanpa batas generasi.',p:'Buyut, canggah, dan seterusnya — semuanya mahrom.'}]},
+  anak_p:{status:'mahrom',n:'Anak Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُكُمْ",t:'"...dan anak-anak perempuanmu..."',p:'Disebutkan eksplisit dalam Al-Qur\'an.'}]},
+  cucu_p:{status:'mahrom',n:'Cucu Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُكُمْ",t:'Mencakup cucu perempuan ke bawah.',p:'Cucu dari anak laki-laki maupun anak perempuan — keduanya mahrom.'}]},
+  cicit_p:{status:'mahrom',n:'Cicit / Keturunan Perempuan Jauh',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُكُمْ",t:'Mencakup seluruh keturunan perempuan ke bawah tanpa batas generasi.',p:'Cicit, piut, dan seterusnya — semuanya mahrom.'}]},
+  saudari:{status:'mahrom',n:'Saudari',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُمْ",t:'"...dan saudara-saudara perempuanmu..."',p:'Kandung, seayah, dan seibu — semua mahrom.'}]},
+  bibi_bapak:{status:'mahrom',n:'Bibi dari Bapak',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَعَمَّاتُكُمْ",t:'"...dan bibi-bibimu dari pihak bapak..."',p:'Saudari bapak (kandung/seayah/seibu), juga saudari kakek dan seterusnya ke atas.'}]},
+  bibi_ibu:{status:'mahrom',n:'Bibi dari Ibu',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَخَالَاتُكُمْ",t:'"...dan bibi-bibimu dari pihak ibu..."',p:'Saudari ibu (kandung/seayah/seibu), juga saudari nenek dan seterusnya ke atas.'}]},
+  keponakan_p_sdr_lk:{status:'mahrom',n:'Keponakan Perempuan (dari Saudara Laki-laki)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأَخِ",t:'"...anak-anak perempuan dari saudaramu laki-laki..."',p:'Berlaku untuk saudara kandung/seayah/seibu, dan ke bawah (cucu dari keponakan).'}]},
+  keponakan_p_sdr_pr:{status:'mahrom',n:'Keponakan Perempuan (dari Saudari)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأُخْتِ",t:'"...anak-anak perempuan dari saudaramu perempuan..."',p:'Berlaku untuk saudari kandung/seayah/seibu, dan ke bawah.'}]},
+  sepupu_p:{status:'bukan',n:'Sepupu Perempuan',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Sepupu tidak termasuk dalam daftar yang haram dinikahi pada ayat 23.',p:'Sepupu perempuan BUKAN mahrom. Boleh dinikahi. Ini sering disalahpahami masyarakat.'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab (Hanafi, Maliki, Syafi\'i, Hanbali) sepakat: sepupu bukan mahrom.'}]},
+
+  // ── NASAB PEREMPUAN ──
+  ayah:{status:'mahrom',n:'Ayah Kandung',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Karena anak perempuan haram bagi ayah, ayah adalah mahrom anak perempuan.',p:'Ayah kandung adalah mahrom paling utama bagi wanita.'}]},
+  kakek:{status:'mahrom',n:'Kakek (Nasab)',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Masuk dalam "aba\'ukum" yang mencakup ke atas.',p:'Kakek dari jalur bapak maupun ibu adalah mahrom.'}]},
+  buyut_l:{status:'mahrom',n:'Buyut / Leluhur Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Mencakup seluruh leluhur laki-laki ke atas tanpa batas generasi.',p:'Buyut, canggah, dan seterusnya ke atas — semuanya mahrom.'}]},
+  anak_l:{status:'mahrom',n:'Anak Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَبْنَاؤُكُمُ الَّذِينَ مِنْ أَصْلَابِكُمْ",t:'"...anak-anak laki-laki yang dari tulang rusukmu..."',p:'Anak laki-laki kandung adalah mahrom bagi ibunya.'}]},
+  cucu_l:{status:'mahrom',n:'Cucu Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَبْنَاؤُكُمُ",t:'Mencakup cucu laki-laki ke bawah.',p:'Cucu dari anak laki-laki maupun anak perempuan adalah mahrom.'}]},
+  cicit_l:{status:'mahrom',n:'Cicit / Keturunan Laki-laki Jauh',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Mencakup seluruh keturunan laki-laki ke bawah tanpa batas generasi.',p:'Cicit, piut laki-laki, dan seterusnya — semuanya mahrom.'}]},
+  saudara:{status:'mahrom',n:'Saudara Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُمْ",t:'Saudara laki-laki adalah mahrom bagi saudarinya secara timbal balik.',p:'Kandung, seayah, seibu — semua mahrom.'}]},
+  paman_bapak:{status:'mahrom',n:'Paman dari Bapak',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَعَمَّاتُكُمْ",t:'Karena bibi adalah mahrom laki-laki, paman adalah mahrom perempuan.',p:'Saudara laki-laki bapak (kandung/seayah/seibu), juga saudara laki-laki kakek ke atas.'}]},
+  paman_ibu:{status:'mahrom',n:'Paman dari Ibu',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَخَالَاتُكُمْ",t:'Paman dari ibu adalah mahrom perempuan.',p:'Saudara laki-laki ibu (kandung/seayah/seibu), juga saudara laki-laki nenek ke atas.'}]},
+  keponakan_l_sdr_lk:{status:'mahrom',n:'Keponakan Laki-laki (dari Saudara Laki-laki)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأَخِ",t:'Keponakan laki-laki adalah mahrom bibinya secara timbal balik.',p:'Berlaku untuk saudara kandung/seayah/seibu, dan ke bawah.'}]},
+  keponakan_l_sdr_pr:{status:'mahrom',n:'Keponakan Laki-laki (dari Saudari)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَبَنَاتُ الْأُخْتِ",t:'Keponakan laki-laki dari saudari adalah mahrom.',p:'Berlaku untuk saudari kandung/seayah/seibu, dan ke bawah.'}]},
+  sepupu_l:{status:'bukan',n:'Sepupu Laki-laki',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Sepupu tidak termasuk dalam daftar mahrom.',p:'Sepupu laki-laki BUKAN mahrom bagi perempuan. Tidak boleh khalwat, tidak bisa menemani safar.'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab sepakat: sepupu bukan mahrom. Ini kesalahan umum di masyarakat.'}]},
+
+  // ── MUSHAHARAH SELAMANYA LAKI ──
+  ibu_mertua:{status:'mahrom',n:'Ibu Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُ نِسَائِكُمْ",t:'"...dan ibu-ibu dari istri-istrimu..."',p:'Mahrom sejak akad nikah sah — tanpa perlu dukhul.'}]},
+  nenek_mertua:{status:'mahrom',n:'Nenek Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُ نِسَائِكُمْ",t:'Mencakup nenek ke atas.',p:'Nenek mertua dan seterusnya ke atas — mahrom.'}]},
+  anak_tiri_p:{status:'mahrom',n:'Anak Tiri Perempuan',kondisi:'dukhul',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ اللَّاتِي فِي حُجُورِكُم مِّن نِّسَائِكُمُ اللَّاتِي دَخَلْتُم بِهِنَّ",t:'"...anak-anak tiri dari istri yang sudah kamu gauli..."',p:'Menjadi mahrom HANYA setelah dukhul. Jika belum dukhul lalu cerai, anak tiri boleh dinikahi.'}]},
+  anak_tiri_p_gagal:{status:'bukan',n:'Anak Tiri Perempuan (Belum Dukhul)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ اللَّاتِي دَخَلْتُم بِهِنَّ",t:'Syarat dukhul belum terpenuhi.',p:'Karena belum terjadi dukhul, anak tiri ini BUKAN mahrom. Jika cerai sebelum dukhul, boleh dinikahi.'}]},
+  cucu_tiri_p:{status:'mahrom',n:'Cucu Tiri Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ",t:'Cucu dari anak tiri perempuan mengikuti hukum anak tiri.',p:'Cucu tiri perempuan adalah mahrom (dengan syarat dukhul telah terjadi pada ibunya/neneknya).'}]},
+  ibu_tiri:{status:'mahrom',n:'Ibu Tiri',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم مِّنَ النِّسَاءِ",t:'"Janganlah kamu menikahi wanita yang telah dinikahi ayahmu..."',p:'Ibu tiri menjadi mahrom sejak akad nikah bapak — tanpa syarat dukhul.'}]},
+  nenek_tiri:{status:'mahrom',n:'Nenek Tiri (Istri Kakek)',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم",t:'Istri kakek (nenek tiri) termasuk mahrom.',p:'Mengikuti kaidah: istri dari leluhur ke atas adalah mahrom.'}]},
+  menantu_p:{status:'mahrom',n:'Menantu Perempuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَحَلَائِلُ أَبْنَائِكُمُ الَّذِينَ مِنْ أَصْلَابِكُمْ",t:'"...istri-istri anak kandungmu..."',p:'Menantu perempuan menjadi mahrom sejak akad nikah — tanpa syarat dukhul.'}]},
+  menantu_cucu_p:{status:'mahrom',n:'Istri Cucu / Menantu Cucu',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَحَلَائِلُ أَبْنَائِكُمُ",t:'Mencakup istri cucu ke bawah.',p:'Istri cucu laki-laki adalah mahrom — mengikuti kaidah nasab ke bawah.'}]},
+
+  // ── MUSHAHARAH SEMENTARA LAKI ──
+  saudari_ipar:{status:'sementara',n:'Saudari Ipar (Saudari Istri)',d:[{s:"HR. Bukhari & Muslim",a:"الحَمْوُ المَوْتُ",t:'Nabi ﷺ: "Ipar itu seperti maut."',p:'Saudari istri BUKAN mahrom sejati. Haram dinikah bersama istri, tapi jika istri meninggal/cerai — boleh dinikahi. Jangan khalwat dengannya!'}]},
+  bibi_bapak_istri:{status:'sementara',n:'Bibi Istri dari Bapak',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Haram menikahi bibi dan keponakannya sekaligus.',p:'Saudari bapaknya istri haram dinikah bersama istri. Jika istri cerai/meninggal, boleh menikahi bibinya.'}]},
+  bibi_ibu_istri:{status:'sementara',n:'Bibi Istri dari Ibu',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Haram menikahi bibi dan keponakannya sekaligus.',p:'Saudari ibunya istri haram dinikah bersama istri. Jika istri cerai/meninggal, boleh menikahi bibinya.'}]},
+  keponakan_p_sdr_lk_istri:{status:'sementara',n:'Keponakan Pr Istri (dari Sdr Lk)',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Haram menikahi keponakan dan bibinya sekaligus.',p:'Haram dinikah bersama istri. Jika cerai/meninggal, boleh menikahi keponakannya.'}]},
+  keponakan_p_sdr_pr_istri:{status:'sementara',n:'Keponakan Pr Istri (dari Sdr Pr)',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Haram menikahi keponakan dan bibinya sekaligus.',p:'Haram dinikah bersama istri. Jika cerai/meninggal, boleh menikahi keponakannya.'}]},
+  istri_sdr_lk:{status:'sementara',n:'Istri Saudara Laki-laki',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'"...dan wanita-wanita yang bersuami..."',p:'Istri saudara laki-laki haram dinikahi karena statusnya sebagai wanita bersuami. Jika suaminya (saudaramu) meninggal/cerai, baru boleh.'}]},
+  istri_paman_bapak:{status:'sementara',n:'Istri Paman dari Bapak',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Wanita bersuami haram dinikahi.',p:'Haram karena masih bersuami. Jika paman meninggal/cerai, baru boleh.'}]},
+  istri_paman_ibu:{status:'sementara',n:'Istri Paman dari Ibu',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Wanita bersuami haram dinikahi.',p:'Haram karena masih bersuami. Jika paman meninggal/cerai, baru boleh.'}]},
+  istri_keponakan_sdr_lk:{status:'sementara',n:'Istri Keponakan (dari Sdr Lk)',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Wanita bersuami haram dinikahi.',p:'Haram karena masih bersuami. Jika keponakan meninggal/cerai, baru boleh.'}]},
+  istri_keponakan_sdr_pr:{status:'sementara',n:'Istri Keponakan (dari Sdr Pr)',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Wanita bersuami haram dinikahi.',p:'Haram karena masih bersuami. Jika keponakan meninggal/cerai, baru boleh.'}]},
+
+  // ── MUSHAHARAH SELAMANYA PEREMPUAN ──
+  ayah_mertua:{status:'mahrom',n:'Ayah Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَآبَاؤُكُمُ الَّذِينَ نَكَحُوا مِن نِّسَائِكُمْ",t:'Ayah suami adalah mahrom bagi istri.',p:'Mahrom sejak akad nikah — tanpa syarat dukhul.'}]},
+  kakek_mertua:{status:'mahrom',n:'Kakek Mertua',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Mencakup ke atas.',p:'Kakek mertua dan seterusnya — mahrom.'}]},
+  anak_tiri_l:{status:'mahrom',n:'Anak Tiri Laki-laki',kondisi:'dukhul',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَرَبَائِبُكُمُ",t:'Mengikuti hukum yang sama dengan anak tiri.',p:'Anak laki-laki suami menjadi mahrom — mayoritas ulama: cukup akad nikah tanpa syarat dukhul.'}]},
+  anak_tiri_l_gagal:{status:'mahrom',n:'Anak Tiri Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Mayoritas ulama menyatakan anak tiri laki-laki cukup dengan akad nikah.',p:'Berdasarkan pendapat jumhur ulama, anak laki-laki suami tetap mahrom meski belum terjadi dukhul.'}]},
+  cucu_tiri_l:{status:'mahrom',n:'Cucu Tiri Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Cucu dari anak tiri laki-laki mengikuti hukum anak tiri.',p:'Cucu tiri laki-laki adalah mahrom.'}]},
+  ayah_tiri:{status:'mahrom',n:'Ayah Tiri (Suami Ibu)',kondisi:'dukhul',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم",t:'"Janganlah kamu menikahi wanita yang telah dinikahi ayahmu..." — berlaku timbal balik.',p:'Suami ibu menjadi mahrom bagi anak perempuannya setelah ibu digauli (dukhul).'}]},
+  ayah_tiri_gagal:{status:'bukan',n:'Ayah Tiri (Belum Dukhul)',d:[{s:"QS. An-Nisa' [4]: 22",a:'',t:'Syarat dukhul pada ibu belum terpenuhi.',p:'Karena ibu belum digauli, suami ibu ini belum menjadi mahrom. Jika suami ibu cerai sebelum dukhul, ia boleh menikahi anak perempuan tersebut.'}]},
+  kakek_tiri:{status:'mahrom',n:'Kakek Tiri (Suami Nenek)',d:[{s:"QS. An-Nisa' [4]: 22",a:'',t:'Mengikuti kaidah ke atas.',p:'Suami nenek (kakek tiri) adalah mahrom.'}]},
+  menantu_l:{status:'mahrom',n:'Menantu Laki-laki',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَحَلَائِلُ أَبْنَائِكُمُ",t:'Suami anak perempuan adalah mahrom bagi ibu (mertua).',p:'Mahrom sejak akad nikah — tanpa syarat dukhul.'}]},
+  menantu_cucu_l:{status:'mahrom',n:'Suami Cucu / Menantu Cucu',d:[{s:"QS. An-Nisa' [4]: 23",a:'',t:'Mencakup suami cucu ke bawah.',p:'Suami cucu perempuan adalah mahrom.'}]},
+
+  // ── MUSHAHARAH SEMENTARA PEREMPUAN ──
+  saudara_ipar:{status:'sementara',n:'Saudara Ipar (Saudara Suami)',d:[{s:"HR. Bukhari & Muslim",a:"الحَمْوُ المَوْتُ",t:'Nabi ﷺ: "Ipar itu seperti maut."',p:'Saudara laki-laki suami BUKAN mahrom. Tidak boleh khalwat. Jika suami meninggal/cerai, ia bisa menikahi kamu (jika mau).'}]},
+  paman_bapak_suami:{status:'sementara',n:'Paman Suami dari Bapak',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Wanita bersuami haram dinikahi.',p:'Haram menikahinya selama masih bersuami. Bukan mahrom sejati.'}]},
+  paman_ibu_suami:{status:'sementara',n:'Paman Suami dari Ibu',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati. Haram selama masih bersuami.'}]},
+  keponakan_l_sdr_lk_suami:{status:'sementara',n:'Keponakan Lk (dari Sdr Lk Suami)',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+  keponakan_l_sdr_pr_suami:{status:'sementara',n:'Keponakan Lk (dari Sdr Pr Suami)',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+  suami_sdr_pr:{status:'sementara',n:'Suami Saudari (Ipar Laki-laki)',d:[{s:"QS. An-Nisa' [4]: 24",a:"وَالْمُحْصَنَاتُ مِنَ النِّسَاءِ",t:'Suami saudari adalah laki-laki yang memiliki istri (saudarimu).',p:'Bukan mahrom sejati. Haram selama saudarimu masih menjadi istrinya.'}]},
+  suami_bibi_bapak:{status:'sementara',n:'Suami Bibi dari Bapak',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+  suami_bibi_ibu:{status:'sementara',n:'Suami Bibi dari Ibu',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+  suami_keponakan_sdr_lk:{status:'sementara',n:'Suami Keponakan (dari Sdr Laki-laki)',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+  suami_keponakan_sdr_pr:{status:'sementara',n:'Suami Keponakan (dari Sdr Perempuan)',d:[{s:"QS. An-Nisa' [4]: 24",a:'',t:'Wanita bersuami haram dinikahi.',p:'Bukan mahrom sejati.'}]},
+
+  // ── SUSUAN (shared laki & perempuan) ──
+  ibu_susuan:{status:'mahrom',n:'Ibu Susuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأُمَّهَاتُكُمُ اللَّاتِي أَرْضَعْنَكُمْ",t:'"...dan ibu-ibu yang menyusuimu..."',p:'Disebutkan langsung dalam Al-Qur\'an.'}]},
+  nenek_susuan:{status:'mahrom',n:'Nenek Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'"Diharamkan karena susuan apa yang diharamkan karena nasab."',p:'Nenek susuan = mahrom.'}]},
+  anak_p_susuan:{status:'mahrom',n:'Anak Perempuan Susuan (dari Ibu Susuan)',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak ibu susuan = seperti saudari sendiri.',p:'Anak kandung maupun susuan dari ibu susuan adalah mahrom.'}]},
+  saudari_susuan:{status:'mahrom',n:'Saudari Sesusuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'"...saudara-saudara perempuanmu sesusuan..."',p:'Disebutkan langsung — berlaku untuk sesusuan kandung maupun sesusuan ibu susuan.'}]},
+  bibi_bapak_susuan:{status:'mahrom',n:'Bibi dari Bapak Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Saudari bapak susuan = bibi susuan = mahrom.',p:'Berlaku untuk saudari kandung maupun susuan dari bapak susuan.'}]},
+  bibi_ibu_susuan:{status:'mahrom',n:'Bibi dari Ibu Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Saudari ibu susuan = bibi susuan = mahrom.',p:'Berlaku untuk saudari kandung maupun susuan dari ibu susuan.'}]},
+  keponakan_p_sdr_lk_susuan:{status:'mahrom',n:'Keponakan Pr dari Sdr Lk Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak perempuan saudara laki-laki susuan adalah mahrom.',p:'Mengikuti kaidah susuan = nasab.'}]},
+  keponakan_p_sdr_pr_susuan:{status:'mahrom',n:'Keponakan Pr dari Sdr Pr Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak perempuan saudari sesusuan adalah mahrom.',p:'Mengikuti kaidah susuan = nasab.'}]},
+  ayah_susuan:{status:'mahrom',n:'Ayah Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Suami ibu susuan = ayah susuan = mahrom.',p:'Para ulama sepakat suami ibu susuan adalah mahrom.'}]},
+  kakek_susuan:{status:'mahrom',n:'Kakek Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Ayah dari ibu susuan = kakek susuan = mahrom.',p:'Mengikuti kaidah susuan = nasab.'}]},
+  anak_l_susuan:{status:'mahrom',n:'Anak Laki-laki Susuan (dari Ibu Susuan)',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak laki-laki ibu susuan = saudara sesusuan = mahrom.',p:'Anak kandung maupun susuan dari ibu susuan.'}]},
+  saudara_susuan:{status:'mahrom',n:'Saudara Sesusuan',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'Berlaku dua arah.',p:'Saudara sesusuan laki-laki adalah mahrom bagi wanita sesusuan — kandung maupun susuan dari ibu susuan.'}]},
+  paman_bapak_susuan:{status:'mahrom',n:'Paman dari Bapak Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Saudara laki-laki bapak susuan = paman susuan = mahrom.',p:'Kandung maupun susuan.'}]},
+  paman_ibu_susuan:{status:'mahrom',n:'Paman dari Ibu Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Saudara laki-laki ibu susuan = paman susuan = mahrom.',p:'Kandung maupun susuan.'}]},
+  keponakan_l_sdr_lk_susuan:{status:'mahrom',n:'Keponakan Lk dari Sdr Lk Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak laki-laki saudara laki-laki susuan adalah mahrom.',p:'Mengikuti kaidah susuan = nasab.'}]},
+  keponakan_l_sdr_pr_susuan:{status:'mahrom',n:'Keponakan Lk dari Sdr Pr Susuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak laki-laki saudari sesusuan adalah mahrom.',p:'Mengikuti kaidah susuan = nasab.'}]},
+
+  // ── PERNIKAHAN SUSUAN ──
+  ibu_susuan_istri:{status:'mahrom',n:'Ibu Susuan Istri (Mertua Susuan)',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Ibu susuan istri = mertua susuan = mahrom.',p:'Berlaku sejak akad nikah — tanpa syarat dukhul. Mengikuti hukum ibu mertua kandung.'}]},
+  anak_p_susuan_istri:{status:'mahrom',n:'Anak Tiri Susuan Perempuan',kondisi:'dukhul',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak susuan istri = anak tiri susuan = mahrom (dengan syarat dukhul).',p:'Mengikuti hukum anak tiri — syarat dukhul berlaku.'}]},
+  anak_p_susuan_istri_gagal:{status:'bukan',n:'Anak Tiri Susuan Perempuan (Belum Dukhul)',d:[{s:"HR. Bukhari & Muslim",a:'',t:'Syarat dukhul belum terpenuhi.',p:'Belum menjadi mahrom karena belum dukhul.'}]},
+  ibu_tiri_susuan:{status:'mahrom',n:'Ibu Tiri Susuan (Istri Bapak Susuan)',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Istri bapak susuan = ibu tiri susuan = mahrom.',p:'Cukup akad nikah bapak susuan — tanpa syarat dukhul.'}]},
+  menantu_susuan_p:{status:'mahrom',n:'Menantu Susuan Perempuan',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Istri anak laki-laki susuan = menantu susuan = mahrom.',p:'Cukup akad nikah — tanpa syarat dukhul.'}]},
+  saudari_susuan_istri:{status:'sementara',n:'Saudari Susuan Istri (Sementara)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'Saudari sesusuan istri haram dinikah bersama istri.',p:'Mengikuti hukum saudari ipar — haram selama masih menikah dengan istri yang bersaudara susuan dengannya.'}]},
+  ayah_susuan_suami:{status:'mahrom',n:'Ayah Susuan Suami (Mertua Susuan)',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Ayah susuan suami = mertua susuan = mahrom.',p:'Mahrom sejak akad nikah.'}]},
+  anak_l_susuan_suami:{status:'mahrom',n:'Anak Tiri Susuan Laki-laki',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Anak laki-laki susuan suami = anak tiri susuan = mahrom.',p:'Mengikuti hukum anak tiri laki-laki — mayoritas ulama: cukup akad nikah.'}]},
+  ayah_tiri_susuan:{status:'mahrom',n:'Ayah Tiri Susuan (Suami Ibu Susuan)',kondisi:'dukhul',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Suami ibu susuan = ayah tiri susuan.',p:'Mengikuti hukum ayah tiri — syarat dukhul berlaku pada ibu susuan.'}]},
+  ayah_tiri_susuan_gagal:{status:'bukan',n:'Ayah Tiri Susuan (Belum Dukhul)',d:[{s:"HR. Bukhari & Muslim",a:'',t:'Syarat dukhul pada ibu susuan belum terpenuhi.',p:'Belum menjadi mahrom.'}]},
+  menantu_susuan_l:{status:'mahrom',n:'Menantu Susuan Laki-laki',d:[{s:"HR. Bukhari & Muslim",a:"يَحْرُمُ مِنَ الرَّضَاعِ مَا يَحْرُمُ مِنَ النَّسَبِ",t:'Suami anak perempuan susuan = menantu susuan = mahrom.',p:'Cukup akad nikah.'}]},
+  saudara_susuan_suami:{status:'sementara',n:'Saudara Susuan Suami (Sementara)',d:[{s:"QS. An-Nisa' [4]: 23",a:"وَأَخَوَاتُكُم مِّنَ الرَّضَاعَةِ",t:'Saudara sesusuan suami haram dinikahi selama masih bersuami.',p:'Mengikuti hukum saudara ipar — bukan mahrom sejati.'}]},
+
+  // ── BUKAN MAHROM ──
+  sepupu_p2:{status:'bukan',n:'Sepupu Perempuan',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Tidak termasuk dalam daftar mahrom.',p:'Sepupu BUKAN mahrom. Sering disalahpahami.'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab sepakat.'}]},
+  saudari_tiri:{status:'bukan',n:'Saudari Tiri',d:[{s:"QS. An-Nisa' [4]: 62",a:'',t:'Saudari tiri bukan mahrom karena tidak ada hubungan darah.',p:'Anak perempuan bapak tiri atau ibu tiri dari pernikahan berbeda BUKAN mahrom. Tidak boleh khalwat.'}]},
+  bibi_tiri:{status:'bukan',n:'Bibi Tiri',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Saudari bapak tiri atau ibu tiri BUKAN mahrom — tidak ada hubungan nasab maupun hukum pernikahan yang menjadikannya mahrom.'}]},
+  keponakan_tiri_p:{status:'bukan',n:'Keponakan Perempuan Tiri',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Anak perempuan dari saudara atau saudari tiri BUKAN mahrom.'}]},
+  besan_p:{status:'bukan',n:'Besan Perempuan (Ibu Menantu)',d:[{s:"QS. An-Nisa' [4]: 63 (Qiyas)",a:'',t:'',p:'Ibu dari menantu (besan perempuan) BUKAN mahrom. Sering dianggap mahrom karena hubungan keluarga yang dekat.'}]},
+  anak_menantu_p:{status:'bukan',n:'Anak Perempuan Menantu',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Anak dari menantu BUKAN mahrom.'}]},
+  sdr_menantu_p:{status:'bukan',n:'Saudari Menantu',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Saudara perempuan menantu BUKAN mahrom.'}]},
+  istri_bapak_tiri:{status:'bukan',n:'Istri Bapak Tiri',d:[{s:"QS. An-Nisa' [4]: 22",a:"وَلَا تَنكِحُوا مَا نَكَحَ آبَاؤُكُم",t:'Yang haram dinikahi adalah istri dari ayah kandung atau leluhur kandung.',p:'Istri bapak tiri BUKAN mahrom dan juga tidak haram dinikahi (setelah bapak tiri meninggal/cerai).'}]},
+  mertua_istri_p:{status:'bukan',n:'Ibu Mertua Tiri (dari Istri Terdahulu)',d:[{s:"Pendapat Ulama",a:'',t:'',p:'Jika istri terdahulu sudah meninggal atau cerai, ibu mertuanya (mertua tiri) bukan lagi mahrom menurut sebagian ulama. Konsultasikan ke ulama.'}]},
+  sepupu_l2:{status:'bukan',n:'Sepupu Laki-laki',sepupu:true,d:[{s:"QS. An-Nisa' [4]: 23-24",a:'',t:'Tidak termasuk dalam daftar mahrom.',p:'Sepupu laki-laki BUKAN mahrom bagi perempuan. Tidak boleh khalwat, tidak bisa menemani safar.'},{s:"Ijma' Ulama",a:'',t:'',p:'Seluruh mazhab sepakat.'}]},
+  saudara_tiri:{status:'bukan',n:'Saudara Tiri',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Anak laki-laki bapak tiri atau ibu tiri dari pernikahan berbeda BUKAN mahrom bagi perempuan.'}]},
+  paman_tiri:{status:'bukan',n:'Paman Tiri',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Saudara laki-laki bapak tiri atau ibu tiri BUKAN mahrom.'}]},
+  keponakan_tiri_l:{status:'bukan',n:'Keponakan Laki-laki Tiri',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Anak laki-laki dari saudara atau saudari tiri BUKAN mahrom.'}]},
+  besan_l:{status:'bukan',n:'Besan Laki-laki (Bapak Menantu)',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Bapak menantu BUKAN mahrom. Tidak bisa menemani safar.'}]},
+  anak_menantu_l:{status:'bukan',n:'Anak Laki-laki Menantu',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Anak dari menantu BUKAN mahrom.'}]},
+  sdr_menantu_l:{status:'bukan',n:'Saudara Menantu',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Saudara laki-laki menantu BUKAN mahrom.'}]},
+  suami_ibu_tiri:{status:'bukan',n:'Suami Ibu Tiri (Sebelum/Sesudah)',d:[{s:"Tidak ada dalil mahrom",a:'',t:'',p:'Suami ibu tiri sebelum menikah dengan bapak, atau setelah bercerai dengan ibu tiri, BUKAN mahrom.'}]},
+
+  // ── GAGAL ──
+  susuan_gagal:{status:'bukan',n:'Tidak Memenuhi Syarat Susuan',d:[{s:"HR. Muslim",a:"لَا تُحَرِّمُ الْمَصَّةُ وَالْمَصَّتَانِ",t:'Nabi ﷺ: "Satu atau dua isapan tidak menjadikan mahrom."',p:'Syarat mahrom dari susuan: (1) minimal 5 kali mengenyangkan, (2) sebelum usia 2 tahun. Jika tidak terpenuhi, tidak ada hubungan mahrom.'},{s:"HR. Muslim (riwayat Aisyah)",a:"خَمْسُ رَضَعَاتٍ يُحَرِّمْنَ",t:'"Lima kali susuan menjadikan mahrom."',p:'Pendapat yang dipilih Imam Syafi\'i dan mayoritas ulama.'}]},
+};
+
+// ─── RENDER RESULT ─────────────────────────────────────────────────────────
 function renderResult(key) {
-  const res=RES[key]||RES[S.relation];
-  if(!res) return;
-  showOnly('step5');
-  updateProgress(5);
-  const isMahrom=res.m;
-  const typeLabel={nasab:'Nasab',mushaharah:'Mushaharah',susuan:"Rada'ah (Susuan)"}[S.type];
-  const gL=S.gender==='laki'?'Laki-laki':'Perempuan';
-  const impl=isMahrom?[
-    {i:'🤝',t:'Boleh berjabat tangan'},{i:'✈️',t:'Boleh menemani safar'},
-    {i:'👀',t:'Aurat lebih longgar'},{i:'🚫',t:'Haram dinikahi selamanya'},
-  ]:[
-    {i:'🚫',t:'Tidak boleh khalwat'},{i:'🤝',t:'Tidak boleh jabat tangan'},
-    {i:'✈️',t:'Tidak bisa mahrom safar'},{i:'💍',t:'Boleh dinikahi (jika halal)'},
-  ];
-  const dalilH=res.d.map(d=>`
-    <div class="dalil-item">
-      <div class="dalil-source">${d.s}</div>
-      ${d.a?`<div class="dalil-arabic">${d.a}</div>`:''}
-      ${d.t?`<div class="dalil-trans">${d.t}</div>`:''}
-      ${d.p?`<div class="dalil-note">${d.p}</div>`:''}
-    </div>`).join('');
-  const implH=impl.map(i=>`<div class="implikasi-item"><span class="implikasi-icon">${i.i}</span><span>${i.t}</span></div>`).join('');
-  const sepupuNote=res.sepupu?`<div class="special-note warning"><strong>⚠️ Kesalahpahaman Umum di Masyarakat</strong>Banyak orang mengira sepupu adalah mahrom karena hubungan keluarga yang dekat. Padahal dalam Islam, sepupu adalah ajnabi — orang asing dalam konteks syariat. Berlaku semua aturan pergaulan antar lawan jenis yang bukan mahrom.</div>`:'';
-  const kondisiNote=res.kondisi==='dukhul'?`<div class="special-note info"><strong>ℹ️ Berlaku dengan Syarat Dukhul Terpenuhi</strong>Status mahrom ini berlaku karena dukhul telah terjadi. Jika ternyata belum dukhul, status dapat berubah.</div>`:'';
+  const res = RES[key];
+  if (!res) { console.warn('No result for:', key); return; }
+  pushHistory(S.screen);
+  showScreen('screenResult');
 
-  document.getElementById('resultContainer').innerHTML=`
-    <div class="result-card ${isMahrom?'mahrom':'bukan-mahrom'}">
+  const statusMap = {
+    mahrom: { cls:'mahrom', badge:'MAHROM', icon:'✅', subtitle:'Orang ini adalah mahrom kamu. Ada hubungan yang mengharamkan pernikahan.' },
+    sementara: { cls:'mahrom-sementara', badge:'MAHROM SEMENTARA', icon:'⏳', subtitle:'Orang ini adalah mahrom sementara — bukan mahrom sejati. Status ini berlaku selama ikatan pernikahan masih ada.' },
+    bukan: { cls:'bukan-mahrom', badge:'BUKAN MAHROM', icon:'⚠️', subtitle:'Orang ini bukan mahrom kamu. Berlaku semua aturan pergaulan antara laki-laki dan perempuan yang bukan mahrom.' },
+  };
+  const sm = statusMap[res.status] || statusMap.bukan;
+
+  const typeLabel = {
+    nasab:'Nasab', mushaharah_selamanya:'Mushaharah (Selamanya)',
+    mushaharah_sementara:'Mushaharah (Sementara)', susuan:"Rada'ah (Susuan)",
+    pernikahan_susuan:'Pernikahan dari Susuan', bukan_mahrom:'Bukan Mahrom'
+  }[S.type] || '';
+  const gL = S.gender === 'laki' ? 'Laki-laki' : 'Perempuan';
+
+  const implikasi = {
+    mahrom: [{i:'🤝',t:'Boleh berjabat tangan'},{i:'✈️',t:'Boleh menemani safar'},{i:'👀',t:'Aurat lebih longgar'},{i:'🚫',t:'Haram dinikahi selamanya'}],
+    sementara: [{i:'⏳',t:'Sementara tidak bisa dinikahi'},{i:'🚫',t:'Tidak boleh khalwat'},{i:'💡',t:'Bisa menikahi setelah cerai/wafat'},{i:'✈️',t:'Tidak bisa mahrom safar'}],
+    bukan: [{i:'🚫',t:'Tidak boleh khalwat'},{i:'🤝',t:'Tidak boleh jabat tangan'},{i:'✈️',t:'Tidak bisa mahrom safar'},{i:'💍',t:'Boleh dinikahi (jika halal)'}],
+  }[res.status] || [];
+
+  const dalilH = res.d.map(d=>`<div class="dalil-item"><div class="dalil-source">${d.s}</div>${d.a?`<div class="dalil-arabic">${d.a}</div>`:''}<div class="dalil-trans">${d.t}</div><div class="dalil-note">${d.p}</div></div>`).join('');
+  const implikasiH = implikasi.map(i=>`<div class="implikasi-item"><span class="implikasi-icon">${i.i}</span><span>${i.t}</span></div>`).join('');
+
+  let extraNotes = '';
+  if (res.sepupu) extraNotes += `<div class="special-note warning"><strong>⚠️ Kesalahpahaman Umum</strong>Banyak orang mengira sepupu adalah mahrom karena hubungan keluarga yang dekat. Padahal dalam Islam, sepupu adalah ajnabi — berlaku semua aturan lawan jenis yang bukan mahrom.</div>`;
+  if (res.kondisi === 'dukhul') extraNotes += `<div class="special-note info"><strong>ℹ️ Berlaku dengan Syarat Dukhul</strong>Status mahrom ini berlaku karena syarat dukhul telah terpenuhi.</div>`;
+  if (res.status === 'sementara') extraNotes += `<div class="special-note warning"><strong>⚠️ Bukan Mahrom Sejati</strong>Ini adalah mahrom sementara — bukan mahrom sejati (haqiqi). Berlaku hanya selama ikatan pernikahan masih ada. Setelah cerai atau pasangan meninggal, hubungan mahrom ini gugur.</div>`;
+
+  document.getElementById('resultContainer').innerHTML = `
+    <div class="result-card ${sm.cls}">
       <div class="hubungan-tag">👤 ${gL} • ${typeLabel}</div>
-      <div class="result-icon">${isMahrom?'✅':'⚠️'}</div>
-      <div class="result-badge">${isMahrom?'MAHROM':'BUKAN MAHROM'}</div>
+      <div class="result-icon">${sm.icon}</div>
+      <div class="result-badge">${sm.badge}</div>
       <div class="result-title">${res.n}</div>
-      <div class="result-subtitle">${isMahrom?'Orang ini adalah mahrom kamu. Ada hubungan yang mengharamkan pernikahan dan membolehkan interaksi tertentu.':'Orang ini bukan mahrom kamu. Berlaku aturan pergaulan antara laki-laki dan perempuan yang bukan mahrom.'}</div>
-      <div class="implikasi-grid">${implH}</div>
-      ${sepupuNote}${kondisiNote}
-      <div class="dalil-section">
-        <div class="dalil-title">📖 Dalil & Penjelasan</div>
-        ${dalilH}
-      </div>
+      <div class="result-subtitle">${sm.subtitle}</div>
+      <div class="implikasi-grid">${implikasiH}</div>
+      ${extraNotes}
+      <div class="dalil-section"><div class="dalil-title">📖 Dalil & Penjelasan</div>${dalilH}</div>
     </div>`;
 }
 
-function reset(){
-  Object.assign(S,{gender:null,type:null,relation:null,needsValidation:false,validationType:null});
-  document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('selected'));
-  document.getElementById('next1').disabled=true;
-  document.getElementById('next2').disabled=true;
-  showOnly('step1');
-  updateProgress(1);
+// ─── WALI NIKAH ──────────────────────────────────────────────────────────
+function showWaliResult(jalur) {
+  pushHistory('screenWaliGender');
+  showScreen('screenResult');
+
+  const waliData = {
+    bapak: {
+      title: 'Urutan Wali Nikah — Nasab Bapak',
+      note: 'Wali dari nasab bapak adalah wali utama yang harus didahulukan.',
+      items: [
+        {n:1, label:'Bapak Kandung', desc:'Wali utama, tidak boleh dilewati selama masih hidup dan layak'},
+        {n:2, label:'Kakek (bapaknya bapak)', desc:'Jika bapak tidak ada'},
+        {n:3, label:'Anak laki-laki (dan keturunannya ke bawah)', desc:'Yang sudah baligh. Jika ada beberapa, yang tertua/paling dekat didahulukan'},
+        {n:4, label:'Saudara laki-laki sekandung', desc:'Kandung (seayah seibu)'},
+        {n:5, label:'Saudara laki-laki sebapak', desc:'Seayah, berbeda ibu'},
+        {n:6, label:'Keponakan dari saudara sekandung', desc:'Anak laki-laki dari saudara sekandung, dan keturunannya ke bawah'},
+        {n:7, label:'Keponakan dari saudara sebapak', desc:'Anak laki-laki dari saudara sebapak, dan keturunannya ke bawah'},
+        {n:8, label:'Paman sekandung dari bapak', desc:'Saudara laki-laki sekandungnya bapak'},
+        {n:9, label:'Paman sebapak dari bapak', desc:'Saudara laki-laki sebapaknya bapak'},
+        {n:10, label:'Sepupu dari paman sekandung', desc:'Anak laki-laki paman sekandung, dan keturunannya ke bawah'},
+        {n:11, label:'Sepupu dari paman sebapak', desc:'Anak laki-laki paman sebapak, dan keturunannya ke bawah'},
+      ]
+    },
+    ibu: {
+      title: 'Urutan Wali Nikah — Nasab Ibu',
+      note: 'Wali dari nasab ibu hanya dipakai jika tidak ada satupun wali dari nasab bapak.',
+      items: [
+        {n:1, label:'Kakek (bapaknya ibu)', desc:'Wali pertama dari jalur ibu'},
+        {n:2, label:'Saudara laki-laki seibu', desc:'Saudara laki-laki yang hanya seibu'},
+        {n:3, label:'Keponakan dari saudara seibu', desc:'Anak laki-laki saudara laki-laki seibu'},
+        {n:4, label:'Paman sekandung dari ibu', desc:'Saudara laki-laki sekandungnya ibu'},
+        {n:5, label:'Paman sebapak dari ibu', desc:'Saudara laki-laki sebapaknya ibu'},
+        {n:6, label:'Sepupu dari paman sekandung ibu', desc:'Anak laki-laki paman sekandung dari ibu'},
+        {n:7, label:'Sepupu dari paman sebapak ibu', desc:'Anak laki-laki paman sebapak dari ibu'},
+      ]
+    }
+  };
+
+  const w = waliData[jalur];
+  const itemsH = w.items.map(i=>`<div class="wali-item"><div class="wali-num">${i.n}</div><div class="wali-text">${i.label}<small>${i.desc}</small></div></div>`).join('');
+
+  document.getElementById('resultContainer').innerHTML = `
+    <div class="result-card wali">
+      <div class="result-icon">🤲</div>
+      <div class="result-badge">WALI NIKAH</div>
+      <div class="result-title">${w.title}</div>
+      <div class="result-subtitle">${w.note}</div>
+      <div class="wali-list"><div class="wali-list-title">📋 Urutan Wali</div>${itemsH}</div>
+      <div class="special-note info" style="margin-top:12px"><strong>ℹ️ Catatan Penting</strong>Urutan ini berdasarkan mazhab Syafi'i. Wali yang lebih dekat harus ada dan layak (Muslim, berakal, baligh, laki-laki, adil) sebelum pindah ke wali berikutnya. Jika semua wali nasab tidak ada, digunakan wali hakim.</div>
+      <div class="dalil-section"><div class="dalil-title">📖 Dalil</div><div class="dalil-item"><div class="dalil-source">HR. Abu Dawud & Tirmidzi</div><div class="dalil-arabic">لَا نِكَاحَ إِلَّا بِوَلِيٍّ</div><div class="dalil-trans">Nabi ﷺ: "Tidak sah nikah kecuali dengan wali."</div></div><div class="dalil-item"><div class="dalil-source">HR. Bukhari & Muslim</div><div class="dalil-arabic">أَيُّمَا امْرَأَةٍ نَكَحَتْ بِغَيْرِ إِذْنِ وَلِيِّهَا فَنِكَاحُهَا بَاطِلٌ</div><div class="dalil-trans">"Wanita mana pun yang menikah tanpa izin walinya, maka nikahnya batal."</div></div></div>
+    </div>`;
 }
+
+// ─── RESET ────────────────────────────────────────────────────────────────
+function reset() {
+  Object.assign(S, {mode:null,gender:null,type:null,relation:null,needsVal:false,valType:null,screen:'mode',history:[]});
+  document.querySelectorAll('.option-btn,.mode-tab').forEach(b=>b.classList.remove('selected','active'));
+  ['nextGender','nextType','nextRelation'].forEach(id=>{ const el=document.getElementById(id); if(el) el.disabled=true; });
+  showScreen('screenMode');
+}
+
+// Init
+updateProgress();
 </script>
 </body>
 </html>
